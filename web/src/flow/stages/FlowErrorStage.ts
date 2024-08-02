@@ -73,9 +73,3 @@ export class FlowErrorStage extends BaseStage<FlowErrorChallenge, FlowChallengeR
             </footer>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-flow-error": FlowErrorStage;
-    }
-}

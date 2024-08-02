@@ -21,9 +21,3 @@ export class AkHintTitle extends AKElement {
 }
 
 export default AkHintTitle;
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-hint-title": AkHintTitle;
-    }
-}

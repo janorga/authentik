@@ -1,4 +1,3 @@
-import "@goauthentik/admin/rbac/PermissionSelectModal";
 import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
 import "@goauthentik/components/ak-toggle-group";
 import "@goauthentik/elements/chips/Chip";
@@ -7,6 +6,7 @@ import "@goauthentik/elements/forms/HorizontalFormElement";
 import { ModelForm } from "@goauthentik/elements/forms/ModelForm";
 import "@goauthentik/elements/forms/Radio";
 import "@goauthentik/elements/forms/SearchSelect";
+import "@goauthentik/elements/rbac/PermissionSelectModal";
 
 import { msg } from "@lit/localize";
 import { TemplateResult, html } from "lit";
@@ -36,7 +36,7 @@ export class UserPermissionForm extends ModelForm<UserPermissionAssign, number> 
         return msg("Successfully assigned permission.");
     }
 
-    async send(data: UserPermissionAssign) {
+    async send(data: UserPermissionAssign): Promise<unknown> {
         await new RbacApi(DEFAULT_CONFIG).rbacPermissionsAssignedByUsersAssignCreate({
             id: this.userId || 0,
             permissionAssignRequest: {
@@ -44,6 +44,7 @@ export class UserPermissionForm extends ModelForm<UserPermissionAssign, number> 
             },
         });
         this.permissionsToAdd = [];
+        return;
     }
 
     renderForm(): TemplateResult {
@@ -83,11 +84,5 @@ export class UserPermissionForm extends ModelForm<UserPermissionAssign, number> 
                 </div>
             </ak-form-element-horizontal>
         </form>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-user-permission-form": UserPermissionForm;
     }
 }

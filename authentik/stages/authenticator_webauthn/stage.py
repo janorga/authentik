@@ -30,6 +30,7 @@ from authentik.core.models import User
 from authentik.flows.challenge import (
     Challenge,
     ChallengeResponse,
+    ChallengeTypes,
     WithUserInfoChallenge,
 )
 from authentik.flows.stage import ChallengeStageView
@@ -143,6 +144,7 @@ class AuthenticatorWebAuthnStageView(ChallengeStageView):
         self.request.session.save()
         return AuthenticatorWebAuthnChallenge(
             data={
+                "type": ChallengeTypes.NATIVE.value,
                 "registration": loads(options_to_json(registration_options)),
             }
         )

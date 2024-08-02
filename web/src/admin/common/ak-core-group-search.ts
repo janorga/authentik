@@ -103,9 +103,3 @@ export class CoreGroupSearch extends CustomListenerElement(AKElement) {
 }
 
 export default CoreGroupSearch;
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-core-group-search": CoreGroupSearch;
-    }
-}

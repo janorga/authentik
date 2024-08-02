@@ -21,9 +21,3 @@ export class AkLicenceNotice extends WithLicenseSummary(AKElement) {
               `;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-license-notice": AkLicenceNotice;
-    }
-}

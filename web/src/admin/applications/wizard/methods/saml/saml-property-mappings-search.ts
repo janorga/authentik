@@ -110,9 +110,3 @@ export class SAMLPropertyMappingSearch extends CustomListenerElement(AKElement) 
 }
 
 export default SAMLPropertyMappingSearch;
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-saml-property-mapping-search": SAMLPropertyMappingSearch;
-    }
-}

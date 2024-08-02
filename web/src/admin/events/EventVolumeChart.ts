@@ -61,9 +61,3 @@ export class EventVolumeChart extends AKChart<Coordinate[]> {
         </div>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-events-volume-chart": EventVolumeChart;
-    }
-}

@@ -265,9 +265,3 @@ export class Wizard extends ModalButton {
         this.canCancel = true;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-wizard": Wizard;
-    }
-}

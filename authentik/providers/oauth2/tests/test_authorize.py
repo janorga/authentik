@@ -10,6 +10,7 @@ from authentik.blueprints.tests import apply_blueprint
 from authentik.core.models import Application
 from authentik.core.tests.utils import create_test_admin_user, create_test_flow
 from authentik.events.models import Event, EventAction
+from authentik.flows.challenge import ChallengeTypes
 from authentik.lib.generators import generate_id
 from authentik.lib.utils.time import timedelta_from_string
 from authentik.providers.oauth2.constants import TOKEN_TYPE
@@ -326,6 +327,7 @@ class TestAuthorize(OAuthTestCase):
             response.content.decode(),
             {
                 "component": "xak-flow-redirect",
+                "type": ChallengeTypes.REDIRECT.value,
                 "to": f"foo://localhost?code={code.code}&state={state}",
             },
         )
@@ -395,6 +397,7 @@ class TestAuthorize(OAuthTestCase):
                 response.content.decode(),
                 {
                     "component": "xak-flow-redirect",
+                    "type": ChallengeTypes.REDIRECT.value,
                     "to": (
                         f"http://localhost#access_token={token.token}"
                         f"&id_token={provider.encode(token.id_token.to_dict())}"
@@ -457,6 +460,7 @@ class TestAuthorize(OAuthTestCase):
                 response.content.decode(),
                 {
                     "component": "xak-flow-redirect",
+                    "type": ChallengeTypes.REDIRECT.value,
                     "to": (f"http://localhost#code={code.code}" f"&state={state}"),
                 },
             )
@@ -512,6 +516,7 @@ class TestAuthorize(OAuthTestCase):
             response.content.decode(),
             {
                 "component": "ak-stage-autosubmit",
+                "type": ChallengeTypes.NATIVE.value,
                 "url": "http://localhost",
                 "title": f"Redirecting to {app.name}...",
                 "attrs": {
@@ -559,6 +564,7 @@ class TestAuthorize(OAuthTestCase):
             response.content.decode(),
             {
                 "component": "ak-stage-autosubmit",
+                "type": ChallengeTypes.NATIVE.value,
                 "url": "http://localhost",
                 "title": f"Redirecting to {app.name}...",
                 "attrs": {

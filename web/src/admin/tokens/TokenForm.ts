@@ -151,9 +151,3 @@ export class TokenForm extends ModelForm<Token, string> {
             ${this.showExpiry ? this.renderExpiry() : html``}`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-token-form": TokenForm;
-    }
-}

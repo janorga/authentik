@@ -9,6 +9,7 @@ from rest_framework.serializers import ValidationError
 from authentik.flows.challenge import (
     Challenge,
     ChallengeResponse,
+    ChallengeTypes,
     WithUserInfoChallenge,
 )
 from authentik.flows.stage import ChallengeStageView
@@ -79,6 +80,7 @@ class CaptchaStageView(ChallengeStageView):
         return CaptchaChallenge(
             data={
                 "js_url": self.executor.current_stage.js_url,
+                "type": ChallengeTypes.NATIVE.value,
                 "site_key": self.executor.current_stage.public_key,
             }
         )

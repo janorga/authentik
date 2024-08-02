@@ -76,9 +76,3 @@ export class OAuth2DeviceCode extends BaseStage<
             </footer>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-flow-provider-oauth2-code": OAuth2DeviceCode;
-    }
-}

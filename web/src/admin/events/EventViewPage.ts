@@ -150,9 +150,3 @@ export class EventViewPage extends AKElement {
             </section>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-event-view": EventViewPage;
-    }
-}

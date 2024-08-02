@@ -101,7 +101,7 @@ export class APIDrawer extends AKElement {
                                 }}
                                 class="pf-c-button pf-m-plain"
                                 type="button"
-                                aria-label=${msg("Close")}
+                                aria-label="Close"
                             >
                                 <i class="fas fa-times" aria-hidden="true"></i>
                             </button>
@@ -115,11 +115,5 @@ export class APIDrawer extends AKElement {
                 </div>
             </div>
         </div>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-api-drawer": APIDrawer;
     }
 }

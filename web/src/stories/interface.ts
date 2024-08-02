@@ -13,9 +13,3 @@ export class StoryInterface extends Interface {
         return this.storyTheme;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-storybook-interface": StoryInterface;
-    }
-}

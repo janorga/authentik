@@ -102,9 +102,3 @@ export class ModalForm extends ModalButton {
             </footer>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-forms-modal": ModalForm;
-    }
-}

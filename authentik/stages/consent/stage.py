@@ -10,6 +10,7 @@ from authentik.core.api.utils import PassiveSerializer
 from authentik.flows.challenge import (
     Challenge,
     ChallengeResponse,
+    ChallengeTypes,
     WithUserInfoChallenge,
 )
 from authentik.flows.planner import PLAN_CONTEXT_APPLICATION, PLAN_CONTEXT_PENDING_USER
@@ -57,6 +58,7 @@ class ConsentStageView(ChallengeStageView):
         token = str(uuid4())
         self.request.session[SESSION_KEY_CONSENT_TOKEN] = token
         data = {
+            "type": ChallengeTypes.NATIVE.value,
             "permissions": self.executor.plan.context.get(PLAN_CONTEXT_CONSENT_PERMISSIONS, []),
             "additional_permissions": self.executor.plan.context.get(
                 PLAN_CONTEXT_CONSENT_EXTRA_PERMISSIONS, []

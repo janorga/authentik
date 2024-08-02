@@ -434,9 +434,3 @@ export class OAuthSourceForm extends WithCapabilitiesConfig(BaseSourceForm<OAuth
             </ak-form-group>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-source-oauth-form": OAuthSourceForm;
-    }
-}

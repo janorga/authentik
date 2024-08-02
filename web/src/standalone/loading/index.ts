@@ -53,9 +53,3 @@ export class Loading extends Interface {
         </section>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-loading": Loading;
-    }
-}

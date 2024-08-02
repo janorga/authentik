@@ -4,7 +4,6 @@ import { BaseProviderForm } from "@goauthentik/admin/providers/BaseProviderForm"
 import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
 import { first } from "@goauthentik/common/utils";
 import "@goauthentik/components/ak-toggle-group";
-import "@goauthentik/elements/ak-dual-select/ak-dual-select-dynamic-selected-provider.js";
 import "@goauthentik/elements/forms/FormGroup";
 import "@goauthentik/elements/forms/HorizontalFormElement";
 import "@goauthentik/elements/forms/SearchSelect";
@@ -22,16 +21,13 @@ import PFSpacing from "@patternfly/patternfly/utilities/Spacing/spacing.css";
 import {
     FlowsInstancesListDesignationEnum,
     PaginatedOAuthSourceList,
+    PaginatedScopeMappingList,
+    PropertymappingsApi,
     ProvidersApi,
     ProxyMode,
     ProxyProvider,
     SourcesApi,
 } from "@goauthentik/api";
-
-import {
-    makeProxyPropertyMappingsSelector,
-    proxyPropertyMappingsProvider,
-} from "./ProxyProviderPropertyMappings.js";
 
 @customElement("ak-provider-proxy-form")
 export class ProxyProviderFormPage extends BaseProviderForm<ProxyProvider> {
@@ -49,12 +45,18 @@ export class ProxyProviderFormPage extends BaseProviderForm<ProxyProvider> {
     }
 
     async load(): Promise<void> {
+        this.propertyMappings = await new PropertymappingsApi(
+            DEFAULT_CONFIG,
+        ).propertymappingsScopeList({
+            ordering: "scope_name",
+        });
         this.oauthSources = await new SourcesApi(DEFAULT_CONFIG).sourcesOauthList({
             ordering: "name",
             hasJwks: true,
         });
     }
 
+    propertyMappings?: PaginatedScopeMappingList;
     oauthSources?: PaginatedOAuthSourceList;
 
     @state()
@@ -321,16 +323,30 @@ export class ProxyProviderFormPage extends BaseProviderForm<ProxyProvider> {
                         label=${msg("Additional scopes")}
                         name="propertyMappings"
                     >
-                        <ak-dual-select-dynamic-selected
-                            .provider=${proxyPropertyMappingsProvider}
-                            .selector=${makeProxyPropertyMappingsSelector(
-                                this.instance?.propertyMappings,
-                            )}
-                            available-label="${msg("Available Scopes")}"
-                            selected-label="${msg("Selected Scopes")}"
-                        ></ak-dual-select-dynamic-selected>
+                        <select class="pf-c-form-control" multiple>
+                            ${this.propertyMappings?.results
+                                .filter((scope) => {
+                                    return !scope.managed?.startsWith("goauthentik.io/providers");
+                                })
+                                .map((scope) => {
+                                    const selected = (this.instance?.propertyMappings || []).some(
+                                        (su) => {
+                                            return su == scope.pk;
+                                        },
+                                    );
+                                    return html`<option
+                                        value=${ifDefined(scope.pk)}
+                                        ?selected=${selected}
+                                    >
+                                        ${scope.name}
+                                    </option>`;
+                                })}
+                        </select>
                         <p class="pf-c-form__helper-text">
                             ${msg("Additional scope mappings, which are passed to the proxy.")}
+                        </p>
+                        <p class="pf-c-form__helper-text">
+                            ${msg("Hold control/command to select multiple items.")}
                         </p>
                     </ak-form-element-horizontal>
 
@@ -433,11 +449,5 @@ ${this.instance?.skipPathRegex}</textarea
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-provider-proxy-form": ProxyProviderFormPage;
     }
 }

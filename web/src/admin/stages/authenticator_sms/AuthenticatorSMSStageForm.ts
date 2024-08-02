@@ -337,9 +337,3 @@ export class AuthenticatorSMSStageForm extends BaseStageForm<AuthenticatorSMSSta
             </ak-form-group>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-authenticator-sms-form": AuthenticatorSMSStageForm;
-    }
-}

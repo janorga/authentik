@@ -5,6 +5,7 @@ import "@goauthentik/admin/users/UserPasswordForm";
 import "@goauthentik/admin/users/UserResetEmailForm";
 import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
 import { MessageLevel } from "@goauthentik/common/messages";
+import { uiConfig } from "@goauthentik/common/ui/config";
 import { me } from "@goauthentik/common/users";
 import { getRelativeTime } from "@goauthentik/common/utils";
 import "@goauthentik/components/ak-status-label";
@@ -134,9 +135,12 @@ export class RelatedUserList extends WithBrandConfig(WithCapabilitiesConfig(Tabl
         return super.styles.concat(PFDescriptionList, PFAlert, PFBanner);
     }
 
-    async apiEndpoint(): Promise<PaginatedResponse<User>> {
+    async apiEndpoint(page: number): Promise<PaginatedResponse<User>> {
         const users = await new CoreApi(DEFAULT_CONFIG).coreUsersList({
-            ...(await this.defaultEndpointConfig()),
+            ordering: this.order,
+            page: page,
+            pageSize: (await uiConfig()).pagination.perPage,
+            search: this.search || "",
             groupsByPk: this.targetGroup ? [this.targetGroup.pk] : [],
             type: this.hideServiceAccounts
                 ? [CoreUsersListTypeEnum.External, CoreUsersListTypeEnum.Internal]
@@ -477,12 +481,5 @@ export class RelatedUserList extends WithBrandConfig(WithCapabilitiesConfig(Tabl
                     </div>
                 </div>
             </div>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-user-related-list": RelatedUserList;
-        "ak-user-related-add": RelatedUserAdd;
     }
 }

@@ -96,9 +96,3 @@ export class LocaleContext extends WithBrandConfig(AKElement) {
 }
 
 export default LocaleContext;
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-locale-context": LocaleContext;
-    }
-}

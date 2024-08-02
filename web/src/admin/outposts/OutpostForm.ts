@@ -230,7 +230,7 @@ export class OutpostForm extends ModelForm<Outpost, string> {
                     selected-label="${msg("Selected Applications")}"
                 ></ak-dual-select-provider>
             </ak-form-element-horizontal>
-            <ak-form-group aria-label=${msg("Advanced settings")}>
+            <ak-form-group aria-label="Advanced settings">
                 <span slot="header"> ${msg("Advanced settings")} </span>
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal label=${msg("Configuration")} name="config">
@@ -257,11 +257,5 @@ export class OutpostForm extends ModelForm<Outpost, string> {
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-outpost-form": OutpostForm;
     }
 }

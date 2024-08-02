@@ -138,9 +138,12 @@ export class UserListPage extends WithBrandConfig(WithCapabilitiesConfig(TablePa
         });
     }
 
-    async apiEndpoint(): Promise<PaginatedResponse<User>> {
+    async apiEndpoint(page: number): Promise<PaginatedResponse<User>> {
         const users = await new CoreApi(DEFAULT_CONFIG).coreUsersList({
-            ...(await this.defaultEndpointConfig()),
+            ordering: this.order,
+            page: page,
+            pageSize: (await uiConfig()).pagination.perPage,
+            search: this.search || "",
             pathStartswith: getURLParam("path", ""),
             isActive: this.hideDeactivated ? true : undefined,
             includeGroups: false,
@@ -418,11 +421,5 @@ export class UserListPage extends WithBrandConfig(WithCapabilitiesConfig(TablePa
                 </div>
             </div>
         </div>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-user-list": UserListPage;
     }
 }

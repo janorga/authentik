@@ -2,15 +2,8 @@
 
 from json import dumps
 
-from django_filters.filters import AllValuesMultipleFilter, BooleanFilter
-from django_filters.filterset import FilterSet
 from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import (
-    OpenApiParameter,
-    OpenApiResponse,
-    extend_schema,
-    extend_schema_field,
-)
+from drf_spectacular.utils import OpenApiParameter, OpenApiResponse, extend_schema
 from guardian.shortcuts import get_objects_for_user
 from rest_framework import mixins
 from rest_framework.decorators import action
@@ -74,18 +67,6 @@ class PropertyMappingSerializer(ManagedSerializer, ModelSerializer, MetaNameSeri
         ]
 
 
-class PropertyMappingFilterSet(FilterSet):
-    """Filter for PropertyMapping"""
-
-    managed = extend_schema_field(OpenApiTypes.STR)(AllValuesMultipleFilter(field_name="managed"))
-
-    managed__isnull = BooleanFilter(field_name="managed", lookup_expr="isnull")
-
-    class Meta:
-        model = PropertyMapping
-        fields = ["name", "managed"]
-
-
 class PropertyMappingViewSet(
     TypesMixin,
     mixins.RetrieveModelMixin,
@@ -106,9 +87,11 @@ class PropertyMappingViewSet(
 
     queryset = PropertyMapping.objects.select_subclasses()
     serializer_class = PropertyMappingSerializer
-    filterset_class = PropertyMappingFilterSet
+    search_fields = [
+        "name",
+    ]
+    filterset_fields = {"managed": ["isnull"]}
     ordering = ["name"]
-    search_fields = ["name"]
 
     @permission_required("authentik_core.view_propertymapping")
     @extend_schema(

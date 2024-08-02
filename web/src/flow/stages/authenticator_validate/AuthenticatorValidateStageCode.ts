@@ -96,9 +96,3 @@ export class AuthenticatorValidateStageWebCode extends BaseDeviceStage<
         </div>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-authenticator-validate-code": AuthenticatorValidateStageWebCode;
-    }
-}

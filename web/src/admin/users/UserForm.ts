@@ -107,7 +107,7 @@ export class UserForm extends ModelForm<User, number> {
                 <ak-radio
                     .options=${[
                         {
-                            label: msg("Internal"),
+                            label: "Internal",
                             value: UserTypeEnum.Internal,
                             default: true,
                             description: html`${msg(
@@ -115,21 +115,21 @@ export class UserForm extends ModelForm<User, number> {
                             )}`,
                         },
                         {
-                            label: msg("External"),
+                            label: "External",
                             value: UserTypeEnum.External,
                             description: html`${msg(
                                 "External users might be external consultants or B2C customers. These users don't get access to enterprise features.",
                             )}`,
                         },
                         {
-                            label: msg("Service account"),
+                            label: "Service account",
                             value: UserTypeEnum.ServiceAccount,
                             description: html`${msg(
                                 "Service accounts should be used for machine-to-machine authentication or other automations.",
                             )}`,
                         },
                         {
-                            label: msg("Internal Service account"),
+                            label: "Internal Service account",
                             value: UserTypeEnum.InternalServiceAccount,
                             disabled: true,
                             description: html`${msg(
@@ -193,11 +193,5 @@ export class UserForm extends ModelForm<User, number> {
                     ${msg("Set custom attributes using YAML or JSON.")}
                 </p>
             </ak-form-element-horizontal>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-user-form": UserForm;
     }
 }

@@ -205,10 +205,3 @@ export class TreeView extends AKElement {
         </div>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-treeview": TreeView;
-        "ak-treeview-node": TreeViewNode;
-    }
-}

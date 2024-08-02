@@ -244,10 +244,3 @@ export class DeleteBulkForm<T> extends ModalButton {
             </footer>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-delete-objects-table": DeleteObjectsTable<unknown>;
-        "ak-forms-delete-bulk": DeleteBulkForm<unknown>;
-    }
-}

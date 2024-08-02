@@ -197,9 +197,3 @@ export class PageHeader extends WithBrandConfig(AKElement) {
             </div>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-page-header": PageHeader;
-    }
-}

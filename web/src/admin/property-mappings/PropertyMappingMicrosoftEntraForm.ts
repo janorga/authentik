@@ -71,9 +71,3 @@ export class PropertyMappingMicrosoftEntraForm extends BasePropertyMappingForm<M
             </ak-form-element-horizontal>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-property-mapping-microsoft-entra-form": PropertyMappingMicrosoftEntraForm;
-    }
-}

@@ -80,9 +80,3 @@ export class SourceWizard extends AKElement {
         `;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-source-wizard": SourceWizard;
-    }
-}

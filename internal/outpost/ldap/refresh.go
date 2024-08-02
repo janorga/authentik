@@ -11,7 +11,6 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"goauthentik.io/api/v3"
-	"goauthentik.io/internal/outpost/ak"
 	"goauthentik.io/internal/outpost/ldap/bind"
 	directbind "goauthentik.io/internal/outpost/ldap/bind/direct"
 	memorybind "goauthentik.io/internal/outpost/ldap/bind/memory"
@@ -41,19 +40,16 @@ func (ls *LDAPServer) getInvalidationFlow() string {
 }
 
 func (ls *LDAPServer) Refresh() error {
-	apiProviders, err := ak.Paginator(ls.ac.Client.OutpostsApi.OutpostsLdapList(context.Background()), ak.PaginatorOptions{
-		PageSize: 100,
-		Logger:   ls.log,
-	})
+	outposts, _, err := ls.ac.Client.OutpostsApi.OutpostsLdapList(context.Background()).Execute()
 	if err != nil {
 		return err
 	}
-	if len(apiProviders) < 1 {
+	if len(outposts.Results) < 1 {
 		return errors.New("no ldap provider defined")
 	}
-	providers := make([]*ProviderInstance, len(apiProviders))
+	providers := make([]*ProviderInstance, len(outposts.Results))
 	invalidationFlow := ls.getInvalidationFlow()
-	for idx, provider := range apiProviders {
+	for idx, provider := range outposts.Results {
 		userDN := strings.ToLower(fmt.Sprintf("ou=%s,%s", constants.OUUsers, *provider.BaseDn))
 		groupDN := strings.ToLower(fmt.Sprintf("ou=%s,%s", constants.OUGroups, *provider.BaseDn))
 		virtualGroupDN := strings.ToLower(fmt.Sprintf("ou=%s,%s", constants.OUVirtualGroups, *provider.BaseDn))

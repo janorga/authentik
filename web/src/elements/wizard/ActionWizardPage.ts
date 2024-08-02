@@ -143,9 +143,3 @@ export class ActionWizardPage extends WizardPage {
         </div>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-wizard-page-action": ActionWizardPage;
-    }
-}

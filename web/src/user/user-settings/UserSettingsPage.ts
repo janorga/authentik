@@ -182,9 +182,3 @@ export class UserSettingsPage extends AKElement {
         </div>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-user-settings": UserSettingsPage;
-    }
-}

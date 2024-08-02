@@ -30,9 +30,3 @@ export class AkHintActions extends AKElement {
 }
 
 export default AkHintActions;
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-hint-actions": AkHintActions;
-    }
-}

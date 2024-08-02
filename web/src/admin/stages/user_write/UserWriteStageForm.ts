@@ -114,7 +114,7 @@ export class UserWriteStageForm extends BaseStageForm<UserWriteStage> {
                         <ak-radio
                             .options=${[
                                 {
-                                    label: msg("Internal"),
+                                    label: "Internal",
                                     value: UserTypeEnum.Internal,
                                     default: true,
                                     description: html`${msg(
@@ -122,14 +122,14 @@ export class UserWriteStageForm extends BaseStageForm<UserWriteStage> {
                                     )}`,
                                 },
                                 {
-                                    label: msg("External"),
+                                    label: "External",
                                     value: UserTypeEnum.External,
                                     description: html`${msg(
                                         "External users might be external consultants or B2C customers. These users don't get access to enterprise features.",
                                     )}`,
                                 },
                                 {
-                                    label: msg("Service account"),
+                                    label: "Service account",
                                     value: UserTypeEnum.ServiceAccount,
                                     description: html`${msg(
                                         "Service accounts should be used for machine-to-machine authentication or other automations.",
@@ -194,11 +194,5 @@ export class UserWriteStageForm extends BaseStageForm<UserWriteStage> {
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-user-write-form": UserWriteStageForm;
     }
 }

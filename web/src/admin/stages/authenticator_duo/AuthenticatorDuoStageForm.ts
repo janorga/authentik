@@ -183,9 +183,3 @@ export class AuthenticatorDuoStageForm extends BaseStageForm<AuthenticatorDuoSta
             </ak-form-group>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-authenticator-duo-form": AuthenticatorDuoStageForm;
-    }
-}

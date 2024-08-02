@@ -145,9 +145,3 @@ export class SyncStatusChart extends AKChart<SummarizedSyncStatus[]> {
         };
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-admin-status-chart-sync": SyncStatusChart;
-    }
-}

@@ -1,28 +1,44 @@
 import "@goauthentik/admin/applications/wizard/ak-wizard-title";
 import "@goauthentik/admin/common/ak-flow-search/ak-flow-search";
-import {
-    makeRACPropertyMappingsSelector,
-    racPropertyMappingsProvider,
-} from "@goauthentik/admin/providers/rac/RACPropertyMappings.js";
+import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
 import "@goauthentik/components/ak-text-input";
 import "@goauthentik/elements/CodeMirror";
-import "@goauthentik/elements/ak-dual-select/ak-dual-select-dynamic-selected-provider.js";
 import "@goauthentik/elements/forms/FormGroup";
 import "@goauthentik/elements/forms/HorizontalFormElement";
 
 import { msg } from "@lit/localize";
 import { html } from "lit";
-import { customElement } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
-import { FlowsInstancesListDesignationEnum, RACProvider } from "@goauthentik/api";
+import {
+    FlowsInstancesListDesignationEnum,
+    PaginatedRACPropertyMappingList,
+    PropertymappingsApi,
+    RACProvider,
+} from "@goauthentik/api";
 
 import BaseProviderPanel from "../BaseProviderPanel";
 
 @customElement("ak-application-wizard-authentication-for-rac")
 export class ApplicationWizardAuthenticationByRAC extends BaseProviderPanel {
+    @state()
+    propertyMappings?: PaginatedRACPropertyMappingList;
+
+    constructor() {
+        super();
+        new PropertymappingsApi(DEFAULT_CONFIG)
+            .propertymappingsRacList({
+                ordering: "name",
+            })
+            .then((propertyMappings) => {
+                this.propertyMappings = propertyMappings;
+            });
+    }
+
     render() {
         const provider = this.wizard.provider as RACProvider | undefined;
+        const selected = new Set(Array.from(provider?.propertyMappings ?? []));
         const errors = this.wizard.errors.provider;
 
         return html`<ak-wizard-title
@@ -69,14 +85,20 @@ export class ApplicationWizardAuthenticationByRAC extends BaseProviderPanel {
                             label=${msg("Property mappings")}
                             name="propertyMappings"
                         >
-                            <ak-dual-select-dynamic-selected
-                                .provider=${racPropertyMappingsProvider}
-                                .selector=${makeRACPropertyMappingsSelector(
-                                    provider?.propertyMappings,
+                            <select class="pf-c-form-control" multiple>
+                                ${this.propertyMappings?.results.map(
+                                    (mapping) =>
+                                        html`<option
+                                            value=${ifDefined(mapping.pk)}
+                                            ?selected=${selected.has(mapping.pk)}
+                                        >
+                                            ${mapping.name}
+                                        </option>`,
                                 )}
-                                available-label="${msg("Available Property Mappings")}"
-                                selected-label="${msg("Selected Property Mappings")}"
-                            ></ak-dual-select-dynamic-selected>
+                            </select>
+                            <p class="pf-c-form__helper-text">
+                                ${msg("Hold control/command to select multiple items.")}
+                            </p>
                         </ak-form-element-horizontal>
                     </div>
                 </ak-form-group>
@@ -85,9 +107,3 @@ export class ApplicationWizardAuthenticationByRAC extends BaseProviderPanel {
 }
 
 export default ApplicationWizardAuthenticationByRAC;
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-application-wizard-authentication-for-rac": ApplicationWizardAuthenticationByRAC;
-    }
-}

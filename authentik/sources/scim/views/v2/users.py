@@ -14,13 +14,22 @@ from authentik.core.models import User
 from authentik.providers.scim.clients.schema import SCIM_USER_SCHEMA
 from authentik.providers.scim.clients.schema import User as SCIMUserModel
 from authentik.sources.scim.models import SCIMSourceUser
-from authentik.sources.scim.views.v2.base import SCIMObjectView
+from authentik.sources.scim.views.v2.base import SCIMView
 
 
-class UsersView(SCIMObjectView):
+class UsersView(SCIMView):
     """SCIM User view"""
 
     model = User
+
+    def get_email(self, data: list[dict]) -> str:
+        """Wrapper to get primary email or first email"""
+        for email in data:
+            if email.get("primary", False):
+                return email.get("value")
+        if len(data) < 1:
+            return ""
+        return data[0].get("value")
 
     def user_to_scim(self, scim_user: SCIMSourceUser) -> dict:
         """Convert User to SCIM data"""
@@ -88,16 +97,21 @@ class UsersView(SCIMObjectView):
     @atomic
     def update_user(self, connection: SCIMSourceUser | None, data: QueryDict):
         """Partial update a user"""
-        properties = self.build_object_properties(data)
-
-        if not properties.get("username"):
-            raise ValidationError("Invalid user")
-
         user = connection.user if connection else User()
-        if _user := User.objects.filter(username=properties.get("username")).first():
+        if _user := User.objects.filter(username=data.get("userName")).first():
             user = _user
-        user.update_attributes(properties)
-
+        user.path = self.source.get_user_path()
+        if "userName" in data:
+            user.username = data.get("userName")
+        if "name" in data:
+            user.name = data.get("name", {}).get("formatted", data.get("displayName"))
+        if "emails" in data:
+            user.email = self.get_email(data.get("emails"))
+        if "active" in data:
+            user.is_active = data.get("active")
+        if user.username == "":
+            raise ValidationError("Invalid user")
+        user.save()
         if not connection:
             connection, _ = SCIMSourceUser.objects.get_or_create(
                 source=self.source,

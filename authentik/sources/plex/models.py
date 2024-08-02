@@ -10,7 +10,7 @@ from rest_framework.serializers import BaseSerializer, Serializer
 
 from authentik.core.models import Source, UserSourceConnection
 from authentik.core.types import UILoginButton, UserSettingSerializer
-from authentik.flows.challenge import Challenge, ChallengeResponse
+from authentik.flows.challenge import Challenge, ChallengeResponse, ChallengeTypes
 from authentik.lib.generators import generate_id
 
 
@@ -71,6 +71,7 @@ class PlexSource(Source):
         return UILoginButton(
             challenge=PlexAuthenticationChallenge(
                 data={
+                    "type": ChallengeTypes.NATIVE.value,
                     "component": "ak-source-plex",
                     "client_id": self.client_id,
                     "slug": self.slug,

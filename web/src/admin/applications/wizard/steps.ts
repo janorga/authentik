@@ -7,7 +7,6 @@ import {
     SubmitStep,
 } from "@goauthentik/components/ak-wizard-main/commonWizardButtons";
 
-import { msg } from "@lit/localize";
 import { html } from "lit";
 
 import "./application/ak-application-wizard-application-details";
@@ -24,7 +23,7 @@ import { ApplicationStep as ApplicationStepType } from "./types";
 
 class ApplicationStep implements ApplicationStepType {
     id = "application";
-    label = msg("Application Details");
+    label = "Application Details";
     disabled = false;
     valid = false;
     get buttons() {
@@ -37,7 +36,7 @@ class ApplicationStep implements ApplicationStepType {
 
 class ProviderMethodStep implements ApplicationStepType {
     id = "provider-method";
-    label = msg("Provider Type");
+    label = "Provider Type";
     disabled = false;
     valid = false;
 
@@ -54,7 +53,7 @@ class ProviderMethodStep implements ApplicationStepType {
 
 class ProviderStepDetails implements ApplicationStepType {
     id = "provider-details";
-    label = msg("Provider Configuration");
+    label = "Provider Configuration";
     disabled = true;
     valid = false;
     get buttons() {
@@ -68,7 +67,7 @@ class ProviderStepDetails implements ApplicationStepType {
 
 class SubmitApplicationStep implements ApplicationStepType {
     id = "submit";
-    label = msg("Submit Application");
+    label = "Submit Application";
     disabled = true;
     valid = false;
 

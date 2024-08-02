@@ -1,5 +1,6 @@
 import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
 import { intentToLabel } from "@goauthentik/common/labels";
+import { uiConfig } from "@goauthentik/common/ui/config";
 import { me } from "@goauthentik/common/users";
 import { getRelativeTime } from "@goauthentik/common/utils";
 import "@goauthentik/components/ak-status-label";
@@ -34,9 +35,12 @@ export class UserTokenList extends Table<Token> {
     @property()
     order = "expires";
 
-    async apiEndpoint(): Promise<PaginatedResponse<Token>> {
+    async apiEndpoint(page: number): Promise<PaginatedResponse<Token>> {
         return new CoreApi(DEFAULT_CONFIG).coreTokensList({
-            ...(await this.defaultEndpointConfig()),
+            ordering: this.order,
+            page: page,
+            pageSize: (await uiConfig()).pagination.perPage,
+            search: this.search || "",
             managed: "",
             // The user might have access to other tokens that aren't for their user
             // but only show tokens for their user here
@@ -178,11 +182,5 @@ export class UserTokenList extends Table<Token> {
                 </ak-token-copy-button>
             `,
         ];
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-user-token-list": UserTokenList;
     }
 }

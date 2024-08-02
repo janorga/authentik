@@ -274,9 +274,3 @@ export class ApplicationWizardProviderSamlConfiguration extends BaseProviderPane
 }
 
 export default ApplicationWizardProviderSamlConfiguration;
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-application-wizard-authentication-by-saml-configuration": ApplicationWizardProviderSamlConfiguration;
-    }
-}

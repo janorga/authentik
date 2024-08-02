@@ -23,7 +23,7 @@ export class LogViewer extends Table<LogEvent> {
         return super.styles.concat(PFDescriptionList);
     }
 
-    async apiEndpoint(): Promise<PaginatedResponse<LogEvent>> {
+    async apiEndpoint(_page: number): Promise<PaginatedResponse<LogEvent>> {
         return {
             pagination: {
                 next: 0,
@@ -110,11 +110,5 @@ export class LogViewer extends Table<LogEvent> {
             html`${item.event}`,
             html`${item.logger}`,
         ];
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-log-viewer": LogViewer;
     }
 }

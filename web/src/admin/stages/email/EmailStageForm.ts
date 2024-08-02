@@ -250,9 +250,3 @@ export class EmailStageForm extends BaseStageForm<EmailStage> {
             ${this.renderConnectionSettings()}`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-email-form": EmailStageForm;
-    }
-}

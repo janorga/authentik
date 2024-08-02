@@ -112,9 +112,3 @@ export class ServiceConnectionDockerForm extends ModelForm<DockerServiceConnecti
             </ak-form-element-horizontal>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-service-connection-docker-form": ServiceConnectionDockerForm;
-    }
-}

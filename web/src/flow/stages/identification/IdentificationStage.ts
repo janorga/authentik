@@ -2,7 +2,6 @@ import { renderSourceIcon } from "@goauthentik/admin/sources/utils";
 import "@goauthentik/elements/Divider";
 import "@goauthentik/elements/EmptyState";
 import "@goauthentik/elements/forms/FormElement";
-import "@goauthentik/flow/components/ak-flow-password-input.js";
 import { BaseStage } from "@goauthentik/flow/stages/base";
 
 import { msg, str } from "@lit/localize";
@@ -13,7 +12,6 @@ import PFAlert from "@patternfly/patternfly/components/Alert/alert.css";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
 import PFForm from "@patternfly/patternfly/components/Form/form.css";
 import PFFormControl from "@patternfly/patternfly/components/FormControl/form-control.css";
-import PFInputGroup from "@patternfly/patternfly/components/InputGroup/input-group.css";
 import PFLogin from "@patternfly/patternfly/components/Login/login.css";
 import PFTitle from "@patternfly/patternfly/components/Title/title.css";
 import PFBase from "@patternfly/patternfly/patternfly-base.css";
@@ -47,32 +45,22 @@ export class IdentificationStage extends BaseStage<
     form?: HTMLFormElement;
 
     static get styles(): CSSResult[] {
-        return [
-            PFBase,
-            PFAlert,
-            PFInputGroup,
-            PFLogin,
-            PFForm,
-            PFFormControl,
-            PFTitle,
-            PFButton,
+        return [PFBase, PFAlert, PFLogin, PFForm, PFFormControl, PFTitle, PFButton].concat(css`
             /* login page's icons */
-            css`
-                .pf-c-login__main-footer-links-item button {
-                    background-color: transparent;
-                    border: 0;
-                    display: flex;
-                    align-items: stretch;
-                }
-                .pf-c-login__main-footer-links-item img {
-                    fill: var(--pf-c-login__main-footer-links-item-link-svg--Fill);
-                    width: 100px;
-                    max-width: var(--pf-c-login__main-footer-links-item-link-svg--Width);
-                    height: 100%;
-                    max-height: var(--pf-c-login__main-footer-links-item-link-svg--Height);
-                }
-            `,
-        ];
+            .pf-c-login__main-footer-links-item button {
+                background-color: transparent;
+                border: 0;
+                display: flex;
+                align-items: stretch;
+            }
+            .pf-c-login__main-footer-links-item img {
+                fill: var(--pf-c-login__main-footer-links-item-link-svg--Fill);
+                width: 100px;
+                max-width: var(--pf-c-login__main-footer-links-item-link-svg--Width);
+                height: 100%;
+                max-height: var(--pf-c-login__main-footer-links-item-link-svg--Height);
+            }
+        `);
     }
 
     updated(changedProperties: PropertyValues<this>) {
@@ -262,15 +250,22 @@ export class IdentificationStage extends BaseStage<
             </ak-form-element>
             ${this.challenge.passwordFields
                 ? html`
-                      <ak-flow-input-password
-                          label=${msg("Password")}
-                          inputId="ak-stage-identification-password"
-                          required
+                      <ak-form-element
+                          label="${msg("Password")}"
+                          ?required="${true}"
                           class="pf-c-form__group"
-                          .errors=${(this.challenge?.responseErrors || {})["password"]}
-                          ?allow-show-password=${this.challenge.allowShowPassword}
-                          prefill=${PasswordManagerPrefill["password"] ?? ""}
-                      ></ak-flow-input-password>
+                          .errors=${(this.challenge.responseErrors || {})["password"]}
+                      >
+                          <input
+                              type="password"
+                              name="password"
+                              placeholder="${msg("Password")}"
+                              autocomplete="current-password"
+                              class="pf-c-form-control"
+                              required
+                              value=${PasswordManagerPrefill.password || ""}
+                          />
+                      </ak-form-element>
                   `
                 : nothing}
             ${"non_field_errors" in (this.challenge?.responseErrors || {})
@@ -329,11 +324,5 @@ export class IdentificationStage extends BaseStage<
                 </ul>
                 ${this.renderFooter()}
             </footer>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-identification": IdentificationStage;
     }
 }

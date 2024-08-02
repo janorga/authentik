@@ -357,9 +357,3 @@ export class PlexSourceForm extends WithCapabilitiesConfig(BaseSourceForm<PlexSo
             </ak-form-group>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-source-plex-form": PlexSourceForm;
-    }
-}

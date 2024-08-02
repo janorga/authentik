@@ -38,11 +38,10 @@ class IdentificationStage(Stage):
         help_text=_(
             (
                 "When set, shows a password field, instead of showing the "
-                "password field as separate step."
+                "password field as seaprate step."
             ),
         ),
     )
-
     case_insensitive_matching = models.BooleanField(
         default=True,
         help_text=_("When enabled, user fields are matched regardless of their casing."),

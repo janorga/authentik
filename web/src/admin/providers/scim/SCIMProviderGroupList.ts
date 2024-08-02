@@ -1,4 +1,5 @@
 import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { uiConfig } from "@goauthentik/common/ui/config";
 import "@goauthentik/elements/forms/DeleteBulkForm";
 import { PaginatedResponse, Table, TableColumn } from "@goauthentik/elements/table/Table";
 
@@ -37,9 +38,12 @@ export class SCIMProviderGroupList extends Table<SCIMProviderGroup> {
         </ak-forms-delete-bulk>`;
     }
 
-    async apiEndpoint(): Promise<PaginatedResponse<SCIMProviderGroup>> {
+    async apiEndpoint(page: number): Promise<PaginatedResponse<SCIMProviderGroup>> {
         return new ProvidersApi(DEFAULT_CONFIG).providersScimGroupsList({
-            ...(await this.defaultEndpointConfig()),
+            page: page,
+            pageSize: (await uiConfig()).pagination.perPage,
+            ordering: this.order,
+            search: this.search || "",
             providerId: this.providerId,
         });
     }
@@ -55,11 +59,5 @@ export class SCIMProviderGroupList extends Table<SCIMProviderGroup> {
             </a>`,
             html`${item.id}`,
         ];
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-provider-scim-groups-list": SCIMProviderGroupList;
     }
 }

@@ -3,8 +3,6 @@ import { placeholderHelperText } from "@goauthentik/admin/helperText";
 import { BaseSourceForm } from "@goauthentik/admin/sources/BaseSourceForm";
 import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
 import { first } from "@goauthentik/common/utils";
-import "@goauthentik/elements/ak-dual-select/ak-dual-select-dynamic-selected-provider.js";
-import { DualSelectPair } from "@goauthentik/elements/ak-dual-select/types.js";
 import "@goauthentik/elements/forms/FormGroup";
 import "@goauthentik/elements/forms/HorizontalFormElement";
 import "@goauthentik/elements/forms/SearchSelect";
@@ -19,35 +17,11 @@ import {
     CoreGroupsListRequest,
     Group,
     LDAPSource,
-    LDAPSourcePropertyMapping,
     LDAPSourceRequest,
+    PaginatedLDAPPropertyMappingList,
     PropertymappingsApi,
     SourcesApi,
 } from "@goauthentik/api";
-
-async function propertyMappingsProvider(page = 1, search = "") {
-    const propertyMappings = await new PropertymappingsApi(
-        DEFAULT_CONFIG,
-    ).propertymappingsSourceLdapList({
-        ordering: "managed",
-        pageSize: 20,
-        search: search.trim(),
-        page,
-    });
-    return {
-        pagination: propertyMappings.pagination,
-        options: propertyMappings.results.map((m) => [m.pk, m.name, m.name, m]),
-    };
-}
-
-function makePropertyMappingsSelector(instanceMappings?: string[]) {
-    const localMappings = instanceMappings ? new Set(instanceMappings) : undefined;
-    return localMappings
-        ? ([pk, _]: DualSelectPair) => localMappings.has(pk)
-        : ([_0, _1, _2, mapping]: DualSelectPair<LDAPSourcePropertyMapping>) =>
-              mapping?.managed?.startsWith("goauthentik.io/sources/ldap/default") ||
-              mapping?.managed?.startsWith("goauthentik.io/sources/ldap/ms");
-}
 
 @customElement("ak-source-ldap-form")
 export class LDAPSourceForm extends BaseSourceForm<LDAPSource> {
@@ -56,6 +30,16 @@ export class LDAPSourceForm extends BaseSourceForm<LDAPSource> {
             slug: pk,
         });
     }
+
+    async load(): Promise<void> {
+        this.propertyMappings = await new PropertymappingsApi(
+            DEFAULT_CONFIG,
+        ).propertymappingsLdapList({
+            ordering: "managed,object_field",
+        });
+    }
+
+    propertyMappings?: PaginatedLDAPPropertyMappingList;
 
     async send(data: LDAPSource): Promise<LDAPSource> {
         if (this.instance) {
@@ -291,34 +275,73 @@ export class LDAPSourceForm extends BaseSourceForm<LDAPSource> {
                 <div slot="body" class="pf-c-form">
                     <ak-form-element-horizontal
                         label=${msg("User Property Mappings")}
-                        name="userPropertyMappings"
+                        name="propertyMappings"
                     >
-                        <ak-dual-select-dynamic-selected
-                            .provider=${propertyMappingsProvider}
-                            .selector=${makePropertyMappingsSelector(
-                                this.instance?.userPropertyMappings,
-                            )}
-                            available-label="${msg("Available User Property Mappings")}"
-                            selected-label="${msg("Selected User Property Mappings")}"
-                        ></ak-dual-select-dynamic-selected>
+                        <select class="pf-c-form-control" multiple>
+                            ${this.propertyMappings?.results.map((mapping) => {
+                                let selected = false;
+                                if (!this.instance?.propertyMappings) {
+                                    selected =
+                                        mapping.managed?.startsWith(
+                                            "goauthentik.io/sources/ldap/default",
+                                        ) ||
+                                        mapping.managed?.startsWith(
+                                            "goauthentik.io/sources/ldap/ms",
+                                        ) ||
+                                        false;
+                                } else {
+                                    selected = Array.from(this.instance?.propertyMappings).some(
+                                        (su) => {
+                                            return su == mapping.pk;
+                                        },
+                                    );
+                                }
+                                return html`<option
+                                    value=${ifDefined(mapping.pk)}
+                                    ?selected=${selected}
+                                >
+                                    ${mapping.name}
+                                </option>`;
+                            })}
+                        </select>
                         <p class="pf-c-form__helper-text">
-                            ${msg("Property mappings for user creation.")}
+                            ${msg("Property mappings used to user creation.")}
+                        </p>
+                        <p class="pf-c-form__helper-text">
+                            ${msg("Hold control/command to select multiple items.")}
                         </p>
                     </ak-form-element-horizontal>
                     <ak-form-element-horizontal
                         label=${msg("Group Property Mappings")}
-                        name="groupPropertyMappings"
+                        name="propertyMappingsGroup"
                     >
-                        <ak-dual-select-dynamic-selected
-                            .provider=${propertyMappingsProvider}
-                            .selector=${makePropertyMappingsSelector(
-                                this.instance?.groupPropertyMappings,
-                            )}
-                            available-label="${msg("Available Group Property Mappings")}"
-                            selected-label="${msg("Selected Group Property Mappings")}"
-                        ></ak-dual-select-dynamic-selected>
+                        <select class="pf-c-form-control" multiple>
+                            ${this.propertyMappings?.results.map((mapping) => {
+                                let selected = false;
+                                if (!this.instance?.propertyMappingsGroup) {
+                                    selected =
+                                        mapping.managed ===
+                                        "goauthentik.io/sources/ldap/default-name";
+                                } else {
+                                    selected = Array.from(
+                                        this.instance?.propertyMappingsGroup,
+                                    ).some((su) => {
+                                        return su == mapping.pk;
+                                    });
+                                }
+                                return html`<option
+                                    value=${ifDefined(mapping.pk)}
+                                    ?selected=${selected}
+                                >
+                                    ${mapping.name}
+                                </option>`;
+                            })}
+                        </select>
                         <p class="pf-c-form__helper-text">
-                            ${msg("Property mappings for group creation.")}
+                            ${msg("Property mappings used to group creation.")}
+                        </p>
+                        <p class="pf-c-form__helper-text">
+                            ${msg("Hold control/command to select multiple items.")}
                         </p>
                     </ak-form-element-horizontal>
                 </div>
@@ -458,11 +481,5 @@ export class LDAPSourceForm extends BaseSourceForm<LDAPSource> {
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-source-ldap-form": LDAPSourceForm;
     }
 }

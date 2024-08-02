@@ -71,9 +71,3 @@ export class PropertyMappingNotification extends ModelForm<NotificationWebhookMa
             </ak-form-element-horizontal>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-property-mapping-notification-form": PropertyMappingNotification;
-    }
-}

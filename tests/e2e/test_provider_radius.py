@@ -87,7 +87,7 @@ class TestProviderRadius(SeleniumTestCase):
         srv = Client(
             server="localhost",
             secret=self.shared_secret.encode(),
-            dict=Dictionary("authentik/providers/radius/dictionaries/dictionary"),
+            dict=Dictionary("tests/radius-dictionary"),
         )
 
         req = srv.CreateAuthPacket(
@@ -109,7 +109,7 @@ class TestProviderRadius(SeleniumTestCase):
         srv = Client(
             server="localhost",
             secret=self.shared_secret.encode(),
-            dict=Dictionary("authentik/providers/radius/dictionaries/dictionary"),
+            dict=Dictionary("tests/radius-dictionary"),
         )
 
         req = srv.CreateAuthPacket(

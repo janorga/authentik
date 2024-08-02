@@ -61,9 +61,3 @@ export class EnterpriseLicenseForm extends ModelForm<License, string> {
             </ak-form-element-horizontal>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-enterprise-license-form": EnterpriseLicenseForm;
-    }
-}

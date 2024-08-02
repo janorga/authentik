@@ -135,9 +135,3 @@ export class PolicyTestForm extends Form<PolicyTestRequest> {
             ${this.result ? this.renderResult() : html``}`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-policy-test-form": PolicyTestForm;
-    }
-}

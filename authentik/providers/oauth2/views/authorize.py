@@ -22,6 +22,7 @@ from authentik.events.signals import get_login_event
 from authentik.flows.challenge import (
     PLAN_CONTEXT_TITLE,
     AutosubmitChallenge,
+    ChallengeTypes,
     HttpChallengeResponse,
 )
 from authentik.flows.exceptions import FlowNonApplicableException
@@ -483,6 +484,7 @@ class OAuthFulfillmentStage(StageView):
 
             challenge = AutosubmitChallenge(
                 data={
+                    "type": ChallengeTypes.NATIVE.value,
                     "component": "ak-stage-autosubmit",
                     "title": self.executor.plan.context.get(
                         PLAN_CONTEXT_TITLE,

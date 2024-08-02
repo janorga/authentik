@@ -321,9 +321,3 @@ export class PolicyBindingForm extends ModelForm<PolicyBinding, string> {
             </ak-form-element-horizontal>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-policy-binding-form": PolicyBindingForm;
-    }
-}

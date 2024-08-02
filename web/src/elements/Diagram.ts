@@ -90,9 +90,3 @@ export class Diagram extends AKElement {
         )}`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-diagram": Diagram;
-    }
-}

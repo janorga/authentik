@@ -6,7 +6,6 @@ import { ascii_letters, digits, first, randomString } from "@goauthentik/common/
 import "@goauthentik/components/ak-radio-input";
 import "@goauthentik/components/ak-text-input";
 import "@goauthentik/components/ak-textarea-input";
-import "@goauthentik/elements/ak-dual-select/ak-dual-select-dynamic-selected-provider.js";
 import "@goauthentik/elements/forms/FormGroup";
 import "@goauthentik/elements/forms/HorizontalFormElement";
 import "@goauthentik/elements/forms/Radio";
@@ -24,15 +23,12 @@ import {
     IssuerModeEnum,
     OAuth2Provider,
     PaginatedOAuthSourceList,
+    PaginatedScopeMappingList,
+    PropertymappingsApi,
     ProvidersApi,
     SourcesApi,
     SubModeEnum,
 } from "@goauthentik/api";
-
-import {
-    makeOAuth2PropertyMappingsSelector,
-    oauth2PropertyMappingsProvider,
-} from "./Oauth2PropertyMappings.js";
 
 export const clientTypeOptions = [
     {
@@ -127,6 +123,7 @@ export const redirectUriHelp = html`${redirectUriHelpMessages.map(
 
 @customElement("ak-provider-oauth2-form")
 export class OAuth2ProviderFormPage extends BaseProviderForm<OAuth2Provider> {
+    propertyMappings?: PaginatedScopeMappingList;
     oauthSources?: PaginatedOAuthSourceList;
 
     @state()
@@ -141,6 +138,11 @@ export class OAuth2ProviderFormPage extends BaseProviderForm<OAuth2Provider> {
     }
 
     async load(): Promise<void> {
+        this.propertyMappings = await new PropertymappingsApi(
+            DEFAULT_CONFIG,
+        ).propertymappingsScopeList({
+            ordering: "scope_name",
+        });
         this.oauthSources = await new SourcesApi(DEFAULT_CONFIG).sourcesOauthList({
             ordering: "name",
             hasJwks: true,
@@ -289,19 +291,33 @@ export class OAuth2ProviderFormPage extends BaseProviderForm<OAuth2Provider> {
                     >
                     </ak-text-input>
                     <ak-form-element-horizontal label=${msg("Scopes")} name="propertyMappings">
-                        <ak-dual-select-dynamic-selected
-                            .provider=${oauth2PropertyMappingsProvider}
-                            .selector=${makeOAuth2PropertyMappingsSelector(
-                                provider?.propertyMappings,
-                            )}
-                            available-label=${msg("Available Scopes")}
-                            selected-label=${msg("Selected Scopes")}
-                        ></ak-dual-select-dynamic-selected>
-
+                        <select class="pf-c-form-control" multiple>
+                            ${this.propertyMappings?.results.map((scope) => {
+                                let selected = false;
+                                if (!provider?.propertyMappings) {
+                                    selected = scope.managed
+                                        ? defaultScopes.includes(scope.managed)
+                                        : false;
+                                } else {
+                                    selected = Array.from(provider?.propertyMappings).some((su) => {
+                                        return su == scope.pk;
+                                    });
+                                }
+                                return html`<option
+                                    value=${ifDefined(scope.pk)}
+                                    ?selected=${selected}
+                                >
+                                    ${scope.name}
+                                </option>`;
+                            })}
+                        </select>
                         <p class="pf-c-form__helper-text">
                             ${msg(
                                 "Select which scopes can be used by the client. The client still has to specify the scope to access the data.",
                             )}
+                        </p>
+                        <p class="pf-c-form__helper-text">
+                            ${msg("Hold control/command to select multiple items.")}
                         </p>
                     </ak-form-element-horizontal>
                     <ak-radio-input
@@ -365,11 +381,5 @@ export class OAuth2ProviderFormPage extends BaseProviderForm<OAuth2Provider> {
                     </ak-form-element-horizontal>
                 </div>
             </ak-form-group>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-provider-oauth2-form": OAuth2ProviderFormPage;
     }
 }

@@ -44,9 +44,3 @@ export class ApplicationWizardAuthenticationMethodChoice extends WithLicenseSumm
 }
 
 export default ApplicationWizardAuthenticationMethodChoice;
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-application-wizard-authentication-method-choice": ApplicationWizardAuthenticationMethodChoice;
-    }
-}

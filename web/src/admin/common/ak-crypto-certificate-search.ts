@@ -128,9 +128,3 @@ export class AkCryptoCertificateSearch extends CustomListenerElement(AKElement) 
 }
 
 export default AkCryptoCertificateSearch;
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-crypto-certificate-search": AkCryptoCertificateSearch;
-    }
-}

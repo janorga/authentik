@@ -1,6 +1,5 @@
 import { EVENT_REFRESH } from "@goauthentik/common/constants";
 import { APIErrorTypes, parseAPIError } from "@goauthentik/common/errors";
-import { uiConfig } from "@goauthentik/common/ui/config";
 import { groupBy } from "@goauthentik/common/utils";
 import { AKElement } from "@goauthentik/elements/Base";
 import "@goauthentik/elements/EmptyState";
@@ -96,7 +95,7 @@ export interface PaginatedResponse<T> {
 }
 
 export abstract class Table<T> extends AKElement implements TableLike {
-    abstract apiEndpoint(): Promise<PaginatedResponse<T>>;
+    abstract apiEndpoint(page: number): Promise<PaginatedResponse<T>>;
     abstract columns(): TableColumn[];
     abstract row(item: T): TemplateResult[];
 
@@ -204,15 +203,6 @@ export abstract class Table<T> extends AKElement implements TableLike {
         }
     }
 
-    async defaultEndpointConfig() {
-        return {
-            ordering: this.order,
-            page: this.page,
-            pageSize: (await uiConfig()).pagination.perPage,
-            search: this.searchEnabled() ? this.search || "" : undefined,
-        };
-    }
-
     public groupBy(items: T[]): [string, T[]][] {
         return groupBy(items, () => {
             return "";
@@ -225,7 +215,7 @@ export abstract class Table<T> extends AKElement implements TableLike {
         }
         this.isLoading = true;
         try {
-            this.data = await this.apiEndpoint();
+            this.data = await this.apiEndpoint(this.page);
             this.error = undefined;
             this.page = this.data.pagination.current;
             const newExpanded: T[] = [];

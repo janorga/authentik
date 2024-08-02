@@ -16,10 +16,10 @@ from authentik.core.models import Group, User
 from authentik.providers.scim.clients.schema import SCIM_USER_SCHEMA
 from authentik.providers.scim.clients.schema import Group as SCIMGroupModel
 from authentik.sources.scim.models import SCIMSourceGroup
-from authentik.sources.scim.views.v2.base import SCIMObjectView
+from authentik.sources.scim.views.v2.base import SCIMView
 
 
-class GroupsView(SCIMObjectView):
+class GroupsView(SCIMView):
     """SCIM Group view"""
 
     model = Group
@@ -77,17 +77,14 @@ class GroupsView(SCIMObjectView):
     @atomic
     def update_group(self, connection: SCIMSourceGroup | None, data: QueryDict):
         """Partial update a group"""
-        properties = self.build_object_properties(data)
-
-        if not properties.get("name"):
-            raise ValidationError("Invalid group")
-
         group = connection.group if connection else Group()
-        if _group := Group.objects.filter(name=properties.get("name")).first():
+        if _group := Group.objects.filter(name=data.get("displayName")).first():
             group = _group
-
-        group.update_attributes(properties)
-
+        if "displayName" in data:
+            group.name = data.get("displayName")
+        if group.name == "":
+            raise ValidationError("Invalid group")
+        group.save()
         if "members" in data:
             query = Q()
             for _member in data.get("members", []):

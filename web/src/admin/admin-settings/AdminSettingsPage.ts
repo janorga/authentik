@@ -110,9 +110,3 @@ export class AdminSettingsPage extends AKElement {
         `;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-admin-settings": AdminSettingsPage;
-    }
-}

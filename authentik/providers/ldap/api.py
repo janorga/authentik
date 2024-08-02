@@ -5,8 +5,7 @@ from django.db.models.query import Q
 from django_filters.filters import BooleanFilter
 from django_filters.filterset import FilterSet
 from rest_framework.fields import CharField, ListField, SerializerMethodField
-from rest_framework.mixins import ListModelMixin
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from authentik.core.api.providers import ProviderSerializer
 from authentik.core.api.used_by import UsedByMixin
@@ -106,7 +105,7 @@ class LDAPOutpostConfigSerializer(ModelSerializer):
         ]
 
 
-class LDAPOutpostConfigViewSet(ListModelMixin, GenericViewSet):
+class LDAPOutpostConfigViewSet(ReadOnlyModelViewSet):
     """LDAPProvider Viewset"""
 
     queryset = LDAPProvider.objects.filter(

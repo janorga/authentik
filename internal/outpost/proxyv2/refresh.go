@@ -14,10 +14,7 @@ import (
 )
 
 func (ps *ProxyServer) Refresh() error {
-	providers, err := ak.Paginator(ps.akAPI.Client.OutpostsApi.OutpostsProxyList(context.Background()), ak.PaginatorOptions{
-		PageSize: 100,
-		Logger:   ps.log,
-	})
+	providers, _, err := ps.akAPI.Client.OutpostsApi.OutpostsProxyList(context.Background()).Execute()
 	if err != nil {
 		ps.log.WithError(err).Error("Failed to fetch providers")
 	}
@@ -25,7 +22,7 @@ func (ps *ProxyServer) Refresh() error {
 		return err
 	}
 	apps := make(map[string]*application.Application)
-	for _, provider := range providers {
+	for _, provider := range providers.Results {
 		rsp := sentry.StartSpan(context.Background(), "authentik.outposts.proxy.application_ss")
 		ua := fmt.Sprintf(" (provider=%s)", provider.Name)
 		hc := &http.Client{
@@ -38,7 +35,7 @@ func (ps *ProxyServer) Refresh() error {
 			),
 		}
 		a, err := application.NewApplication(provider, hc, ps)
-		existing, ok := ps.apps[a.Host]
+		existing, ok := apps[a.Host]
 		if ok {
 			existing.Stop()
 		}

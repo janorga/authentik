@@ -174,9 +174,3 @@ export class WebAuthnAuthenticatorRegisterStage extends BaseStage<
             </div>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-authenticator-webauthn": WebAuthnAuthenticatorRegisterStage;
-    }
-}

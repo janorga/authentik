@@ -261,9 +261,3 @@ export class LDAPProviderFormPage extends WithBrandConfig(BaseProviderForm<LDAPP
             </ak-form-group>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-provider-ldap-form": LDAPProviderFormPage;
-    }
-}

@@ -71,9 +71,3 @@ export class SourceViewPage extends AKElement {
             ${this.renderSource()}`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-source-view": SourceViewPage;
-    }
-}

@@ -332,9 +332,3 @@ ${JSON.stringify(this.state.currentPlan?.planContext, null, 4)}</pre
         </div>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-flow-inspector": FlowInspector;
-    }
-}

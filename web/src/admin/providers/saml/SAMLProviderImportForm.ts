@@ -52,9 +52,3 @@ export class SAMLProviderImportForm extends Form<SAMLProvider> {
             </ak-form-element-horizontal>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-provider-saml-import-form": SAMLProviderImportForm;
-    }
-}

@@ -127,9 +127,3 @@ export class StageWizard extends AKElement {
         `;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-wizard": StageWizard;
-    }
-}

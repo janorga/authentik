@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.views.generic.base import View
 from prometheus_client import Histogram
 from rest_framework.request import Request
-from sentry_sdk import start_span
+from sentry_sdk.hub import Hub
 from structlog.stdlib import BoundLogger, get_logger
 
 from authentik.core.models import User
@@ -18,6 +18,7 @@ from authentik.flows.challenge import (
     AccessDeniedChallenge,
     Challenge,
     ChallengeResponse,
+    ChallengeTypes,
     ContextualFlowInfo,
     HttpChallengeResponse,
     RedirectChallenge,
@@ -123,7 +124,7 @@ class ChallengeStageView(StageView):
                 )
                 return self.executor.restart_flow(keep_context)
             with (
-                start_span(
+                Hub.current.start_span(
                     op="authentik.flow.stage.challenge_invalid",
                     description=self.__class__.__name__,
                 ),
@@ -133,7 +134,7 @@ class ChallengeStageView(StageView):
             ):
                 return self.challenge_invalid(challenge)
         with (
-            start_span(
+            Hub.current.start_span(
                 op="authentik.flow.stage.challenge_valid",
                 description=self.__class__.__name__,
             ),
@@ -159,7 +160,7 @@ class ChallengeStageView(StageView):
 
     def _get_challenge(self, *args, **kwargs) -> Challenge:
         with (
-            start_span(
+            Hub.current.start_span(
                 op="authentik.flow.stage.get_challenge",
                 description=self.__class__.__name__,
             ),
@@ -172,7 +173,7 @@ class ChallengeStageView(StageView):
             except StageInvalidException as exc:
                 self.logger.debug("Got StageInvalidException", exc=exc)
                 return self.executor.stage_invalid()
-        with start_span(
+        with Hub.current.start_span(
             op="authentik.flow.stage._get_challenge",
             description=self.__class__.__name__,
         ):
@@ -243,6 +244,7 @@ class AccessDeniedChallengeView(ChallengeStageView):
         return AccessDeniedChallenge(
             data={
                 "error_message": str(self.error_message or "Unknown error"),
+                "type": ChallengeTypes.NATIVE.value,
                 "component": "ak-stage-access-denied",
             }
         )
@@ -262,6 +264,7 @@ class RedirectStage(ChallengeStageView):
         )
         return RedirectChallenge(
             data={
+                "type": ChallengeTypes.REDIRECT.value,
                 "to": destination,
             }
         )

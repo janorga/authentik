@@ -1,4 +1,3 @@
-import "@goauthentik/admin/rbac/ObjectPermissionModal";
 import "@goauthentik/admin/stages/StageWizard";
 import "@goauthentik/admin/stages/authenticator_duo/AuthenticatorDuoStageForm";
 import "@goauthentik/admin/stages/authenticator_duo/DuoDeviceImportForm";
@@ -22,16 +21,18 @@ import "@goauthentik/admin/stages/user_login/UserLoginStageForm";
 import "@goauthentik/admin/stages/user_logout/UserLogoutStageForm";
 import "@goauthentik/admin/stages/user_write/UserWriteStageForm";
 import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { uiConfig } from "@goauthentik/common/ui/config";
 import "@goauthentik/elements/forms/DeleteBulkForm";
 import "@goauthentik/elements/forms/ModalForm";
 import "@goauthentik/elements/forms/ProxyForm";
+import "@goauthentik/elements/rbac/ObjectPermissionModal";
 import { PaginatedResponse } from "@goauthentik/elements/table/Table";
 import { TableColumn } from "@goauthentik/elements/table/Table";
 import { TablePage } from "@goauthentik/elements/table/TablePage";
 import "@patternfly/elements/pf-tooltip/pf-tooltip.js";
 
 import { msg, str } from "@lit/localize";
-import { TemplateResult, html, nothing } from "lit";
+import { TemplateResult, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 
@@ -60,8 +61,13 @@ export class StageListPage extends TablePage<Stage> {
     @property()
     order = "name";
 
-    async apiEndpoint(): Promise<PaginatedResponse<Stage>> {
-        return new StagesApi(DEFAULT_CONFIG).stagesAllList(await this.defaultEndpointConfig());
+    async apiEndpoint(page: number): Promise<PaginatedResponse<Stage>> {
+        return new StagesApi(DEFAULT_CONFIG).stagesAllList({
+            ordering: this.order,
+            page: page,
+            pageSize: (await uiConfig()).pagination.perPage,
+            search: this.search || "",
+        });
     }
 
     columns(): TableColumn[] {
@@ -94,23 +100,26 @@ export class StageListPage extends TablePage<Stage> {
         </ak-forms-delete-bulk>`;
     }
 
-    renderStageActions(stage: Stage) {
-        return stage.component === "ak-stage-authenticator-duo-form"
-            ? html`<ak-forms-modal>
-                  <span slot="submit">${msg("Import")}</span>
-                  <span slot="header">${msg("Import Duo device")}</span>
-                  <ak-stage-authenticator-duo-device-import-form
-                      slot="form"
-                      .instancePk=${stage.pk}
-                  >
-                  </ak-stage-authenticator-duo-device-import-form>
-                  <button slot="trigger" class="pf-c-button pf-m-plain">
-                      <pf-tooltip position="top" content=${msg("Import devices")}>
-                          <i class="fas fa-file-import" aria-hidden="true"></i>
-                      </pf-tooltip>
-                  </button>
-              </ak-forms-modal>`
-            : nothing;
+    renderStageActions(stage: Stage): TemplateResult {
+        switch (stage.component) {
+            case "ak-stage-authenticator-duo-form":
+                return html`<ak-forms-modal>
+                    <span slot="submit">${msg("Import")}</span>
+                    <span slot="header">${msg("Import Duo device")}</span>
+                    <ak-stage-authenticator-duo-device-import-form
+                        slot="form"
+                        .instancePk=${stage.pk}
+                    >
+                    </ak-stage-authenticator-duo-device-import-form>
+                    <button slot="trigger" class="pf-c-button pf-m-plain">
+                        <pf-tooltip position="top" content=${msg("Import devices")}>
+                            <i class="fas fa-file-import" aria-hidden="true"></i>
+                        </pf-tooltip>
+                    </button>
+                </ak-forms-modal>`;
+            default:
+                return html``;
+        }
     }
 
     row(item: Stage): TemplateResult[] {
@@ -151,11 +160,5 @@ export class StageListPage extends TablePage<Stage> {
 
     renderObjectCreate(): TemplateResult {
         return html`<ak-stage-wizard></ak-stage-wizard> `;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-list": StageListPage;
     }
 }

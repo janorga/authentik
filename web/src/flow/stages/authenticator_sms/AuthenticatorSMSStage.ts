@@ -154,9 +154,3 @@ export class AuthenticatorSMSStage extends BaseStage<
         return this.renderCode();
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-authenticator-sms": AuthenticatorSMSStage;
-    }
-}

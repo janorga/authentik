@@ -2,6 +2,7 @@ import { EventGeo, EventUser } from "@goauthentik/admin/events/utils";
 import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
 import { EventWithContext } from "@goauthentik/common/events";
 import { actionToLabel } from "@goauthentik/common/labels";
+import { uiConfig } from "@goauthentik/common/ui/config";
 import { getRelativeTime } from "@goauthentik/common/utils";
 import "@goauthentik/components/ak-event-info";
 import "@goauthentik/elements/Tabs";
@@ -33,7 +34,7 @@ export class ObjectChangelog extends Table<Event> {
     @property()
     targetModelName = "";
 
-    async apiEndpoint(): Promise<PaginatedResponse<Event>> {
+    async apiEndpoint(page: number): Promise<PaginatedResponse<Event>> {
         let modelName = this.targetModelName;
         let appName = this.targetModelApp;
         if (this.targetModelName.indexOf(".") !== -1) {
@@ -45,8 +46,10 @@ export class ObjectChangelog extends Table<Event> {
             return Promise.reject();
         }
         return new EventsApi(DEFAULT_CONFIG).eventsEventsList({
-            ...(await this.defaultEndpointConfig()),
             action: "model_",
+            page: page,
+            ordering: this.order,
+            pageSize: (await uiConfig()).pagination.perPage,
             contextModelApp: appName,
             contextModelName: modelName,
             contextModelPk: this.targetModelPk.toString(),
@@ -97,11 +100,5 @@ export class ObjectChangelog extends Table<Event> {
                 <div slot="body">${msg("No matching events could be found.")}</div>
             </ak-empty-state>`,
         );
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-object-changelog": ObjectChangelog;
     }
 }

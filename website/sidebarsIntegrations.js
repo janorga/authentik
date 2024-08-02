@@ -40,7 +40,6 @@ module.exports = {
                         "services/rocketchat/index",
                         "services/roundcube/index",
                         "services/sharepoint-se/index",
-                        "services/slack/index",
                         "services/vikunja/index",
                         "services/wekan/index",
                         "services/wiki-js/index",
@@ -61,10 +60,7 @@ module.exports = {
                 {
                     type: "category",
                     label: "Dashboards",
-                    items: [
-                        "services/organizr/index",
-                        "services/linkwarden/index",
-                    ],
+                    items: ["services/organizr/index"],
                 },
                 {
                     type: "category",
@@ -121,7 +117,6 @@ module.exports = {
                     type: "category",
                     label: "Miscellaneous",
                     items: [
-                        "services/engomo/index",
                         "services/freshrss/index",
                         "services/gravitee/index",
                         "services/home-assistant/index",
@@ -138,10 +133,8 @@ module.exports = {
                     type: "category",
                     label: "Monitoring",
                     items: [
-                        "services/gatus/index",
                         "services/glitchtip/index",
                         "services/grafana/index",
-                        "services/observium/index",
                         "services/sentry/index",
                         "services/ubuntu-landscape/index",
                         "services/uptime-kuma/index",

@@ -3,11 +3,12 @@ import { MessageLevel } from "@goauthentik/common/messages";
 import { camelToSnake, convertToSlug, dateToUTC } from "@goauthentik/common/utils";
 import { AKElement } from "@goauthentik/elements/Base";
 import { HorizontalFormElement } from "@goauthentik/elements/forms/HorizontalFormElement";
+import { SearchSelect } from "@goauthentik/elements/forms/SearchSelect";
 import { PreventFormSubmit } from "@goauthentik/elements/forms/helpers";
 import { showMessage } from "@goauthentik/elements/messages/MessageContainer";
 
 import { CSSResult, TemplateResult, css, html } from "lit";
-import { property, state } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 
 import PFAlert from "@patternfly/patternfly/components/Alert/alert.css";
 import PFButton from "@patternfly/patternfly/components/Button/button.css";
@@ -73,8 +74,8 @@ export function serializeForm<T extends KeyUnknown>(
             return;
         }
 
-        const inputElement = element.querySelector<AkControlElement>("[name]");
-        if (element.hidden || !inputElement || (element.writeOnly && !element.writeOnlyActivated)) {
+        const inputElement = element.querySelector<HTMLInputElement>("[name]");
+        if (element.hidden || !inputElement) {
             return;
         }
 
@@ -83,6 +84,10 @@ export function serializeForm<T extends KeyUnknown>(
             return;
         }
 
+        // Skip elements that are writeOnly where the user hasn't clicked on the value
+        if (element.writeOnly && !element.writeOnlyActivated) {
+            return;
+        }
         if (
             inputElement.tagName.toLowerCase() === "select" &&
             "multiple" in inputElement.attributes
@@ -115,6 +120,17 @@ export function serializeForm<T extends KeyUnknown>(
             assignValue(inputElement, inputElement.checked, json);
         } else if ("selectedFlow" in inputElement) {
             assignValue(inputElement, inputElement.value, json);
+        } else if (inputElement.tagName.toLowerCase() === "ak-search-select") {
+            const select = inputElement as unknown as SearchSelect<unknown>;
+            try {
+                const value = select.toForm();
+                assignValue(inputElement, value, json);
+            } catch (exc) {
+                if (exc instanceof PreventFormSubmit) {
+                    throw new PreventFormSubmit(exc.message, element);
+                }
+                throw exc;
+            }
         } else {
             assignValue(inputElement, inputElement.value, json);
         }
@@ -153,6 +169,7 @@ export function serializeForm<T extends KeyUnknown>(
  *
  */
 
+@customElement("ak-form")
 export abstract class Form<T> extends AKElement {
     abstract send(data: T): Promise<unknown>;
 

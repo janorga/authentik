@@ -85,9 +85,3 @@ export class SourceSettingsPlex extends BaseUserSettings {
         return html`${msg("-")}`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-user-settings-source-plex": SourceSettingsPlex;
-    }
-}

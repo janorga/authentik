@@ -103,7 +103,11 @@ export class ApplicationWizardCommitApplication extends BasePanel {
             );
             if (!providerModel) {
                 throw new Error(
-                    `Could not determine provider model from user request: ${JSON.stringify(this.wizard, null, 2)}`,
+                    `Could not determine provider model from user request: ${JSON.stringify(
+                        this.wizard,
+                        null,
+                        2,
+                    )}`,
                 );
             }
 
@@ -114,6 +118,7 @@ export class ApplicationWizardCommitApplication extends BasePanel {
             };
 
             this.send(request);
+            return;
         }
     }
 
@@ -212,9 +217,3 @@ export class ApplicationWizardCommitApplication extends BasePanel {
 }
 
 export default ApplicationWizardCommitApplication;
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-application-wizard-commit-application": ApplicationWizardCommitApplication;
-    }
-}

@@ -109,9 +109,3 @@ export class ApplicationWizard extends CustomListenerElement(
         this.requestUpdate();
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-application-wizard": ApplicationWizard;
-    }
-}

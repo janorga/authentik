@@ -241,9 +241,3 @@ export class AuthenticatorWebAuthnStageForm extends BaseStageForm<AuthenticatorW
             </ak-form-group>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-authenticator-webauthn-form": AuthenticatorWebAuthnStageForm;
-    }
-}

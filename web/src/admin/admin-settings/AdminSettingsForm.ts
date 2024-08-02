@@ -214,9 +214,3 @@ export class AdminSettingsForm extends Form<SettingsRequest> {
         `;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-admin-settings-form": AdminSettingsForm;
-    }
-}

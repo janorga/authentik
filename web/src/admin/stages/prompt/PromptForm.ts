@@ -376,9 +376,3 @@ export class PromptForm extends ModelForm<Prompt, string> {
             </ak-form-element-horizontal>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-prompt-form": PromptForm;
-    }
-}

@@ -60,8 +60,6 @@ class SourceSerializer(ModelSerializer, MetaNameSerializer):
             "enabled",
             "authentication_flow",
             "enrollment_flow",
-            "user_property_mappings",
-            "group_property_mappings",
             "component",
             "verbose_name",
             "verbose_name_plural",
@@ -190,7 +188,6 @@ class UserSourceConnectionViewSet(
     queryset = UserSourceConnection.objects.all()
     serializer_class = UserSourceConnectionSerializer
     permission_classes = [OwnerSuperuserPermissions]
-    filterset_fields = ["user", "source__slug"]
-    search_fields = ["source__slug"]
+    filterset_fields = ["user"]
     filter_backends = [OwnerFilter, DjangoFilterBackend, OrderingFilter, SearchFilter]
-    ordering = ["source__slug", "pk"]
+    ordering = ["pk"]

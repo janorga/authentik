@@ -33,7 +33,7 @@ export const staticSettingOptions: RadioOption<string | undefined>[] = [
 ];
 
 @customElement("ak-property-mapping-rac-form")
-export class PropertyMappingRACForm extends ModelForm<RACPropertyMapping, string> {
+export class PropertyMappingLDAPForm extends ModelForm<RACPropertyMapping, string> {
     loadInstance(pk: string): Promise<RACPropertyMapping> {
         return new PropertymappingsApi(DEFAULT_CONFIG).propertymappingsRacRetrieve({
             pmUuid: pk,
@@ -172,11 +172,5 @@ export class PropertyMappingRACForm extends ModelForm<RACPropertyMapping, string
                 </div>
             </ak-form-group>
         `;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-property-mapping-rac-form": PropertyMappingRACForm;
     }
 }

@@ -1,6 +1,5 @@
 import { AKElement } from "@goauthentik/elements/Base";
 
-import { msg } from "@lit/localize";
 import { CSSResult, TemplateResult, css, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
@@ -27,7 +26,7 @@ export class FormGroup extends AKElement {
     expanded = false;
 
     @property({ type: String, attribute: "aria-label", reflect: true })
-    ariaLabel = msg("Details");
+    ariaLabel = "Details";
 
     static get styles(): CSSResult[] {
         return [
@@ -76,11 +75,5 @@ export class FormGroup extends AKElement {
             </div>
             <slot ?hidden=${!this.expanded} class="pf-c-form__field-group-body" name="body"></slot>
         </div>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-form-group": FormGroup;
     }
 }

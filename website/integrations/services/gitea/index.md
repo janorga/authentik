@@ -29,10 +29,6 @@ In authentik, create an _OAuth2/OpenID Provider_ (under _Applications/Providers_
 Only settings that have been modified from default have been listed.
 :::
 
-**General Settings**
-
--   Redirect URIs: `https://gitea.company/user/oauth2/authentik/callback`
-
 **Protocol Settings**
 
 -   Name: Gitea

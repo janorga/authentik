@@ -62,9 +62,3 @@ export class UserResetEmailForm extends Form<CoreUsersRecoveryEmailCreateRequest
         </ak-form-element-horizontal>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-user-reset-email-form": UserResetEmailForm;
-    }
-}

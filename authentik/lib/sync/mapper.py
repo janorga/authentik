@@ -20,10 +20,6 @@ class PropertyMappingManager:
 
     _evaluators: list[PropertyMappingEvaluator]
 
-    globals: dict
-
-    __has_compiled: bool
-
     def __init__(
         self,
         qs: QuerySet[PropertyMapping],
@@ -34,11 +30,10 @@ class PropertyMappingManager:
         # we need a list of all parameter names that will be used during evaluation
         context_keys: list[str],
     ) -> None:
-        self.query_set = qs.order_by("name")
+        self.query_set = qs
         self.mapping_subclass = mapping_subclass
         self.context_keys = context_keys
-        self.globals = {}
-        self.__has_compiled = False
+        self.compile()
 
     def compile(self):
         self._evaluators = []
@@ -48,7 +43,6 @@ class PropertyMappingManager:
             evaluator = PropertyMappingEvaluator(
                 mapping, **{key: None for key in self.context_keys}
             )
-            evaluator._globals.update(self.globals)
             # Compile and cache expression
             evaluator.compile()
             self._evaluators.append(evaluator)
@@ -62,9 +56,6 @@ class PropertyMappingManager:
     ) -> Generator[tuple[dict, PropertyMapping], None]:
         """Iterate over all mappings that were pre-compiled and
         execute all of them with the given context"""
-        if not self.__has_compiled:
-            self.compile()
-            self.__has_compiled = True
         for mapping in self._evaluators:
             mapping.set_context(user, request, **kwargs)
             try:

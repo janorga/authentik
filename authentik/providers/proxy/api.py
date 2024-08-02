@@ -6,8 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from drf_spectacular.utils import extend_schema_field
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import CharField, ListField, ReadOnlyField, SerializerMethodField
-from rest_framework.mixins import ListModelMixin
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from authentik.core.api.providers import ProviderSerializer
 from authentik.core.api.used_by import UsedByMixin
@@ -182,7 +181,7 @@ class ProxyOutpostConfigSerializer(ModelSerializer):
         ]
 
 
-class ProxyOutpostConfigViewSet(ListModelMixin, GenericViewSet):
+class ProxyOutpostConfigViewSet(ReadOnlyModelViewSet):
     """ProxyProvider Viewset"""
 
     queryset = ProxyProvider.objects.filter(application__isnull=False)

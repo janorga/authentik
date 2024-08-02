@@ -104,9 +104,3 @@ export class Markdown extends AKElement {
         ${unsafeHTML(this.docHtml)}`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-markdown": Markdown;
-    }
-}

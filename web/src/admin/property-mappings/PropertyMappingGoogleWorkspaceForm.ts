@@ -71,9 +71,3 @@ export class PropertyMappingGoogleWorkspaceForm extends BasePropertyMappingForm<
             </ak-form-element-horizontal>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-property-mapping-google-workspace-form": PropertyMappingGoogleWorkspaceForm;
-    }
-}

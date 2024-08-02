@@ -562,9 +562,3 @@ ${JSON.stringify(value.new_value, null, 4)}</pre
         </div>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-event-info": EventInfo;
-    }
-}

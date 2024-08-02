@@ -34,9 +34,3 @@ export class DropdownButton extends AKElement {
         return html`<slot></slot>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-dropdown": DropdownButton;
-    }
-}

@@ -113,10 +113,4 @@ export class Radio<T> extends CustomEmitterElement(AKElement) {
     }
 }
 
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-radio": Radio<unknown>;
-    }
-}
-
 export default Radio;

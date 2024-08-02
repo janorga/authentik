@@ -74,9 +74,3 @@ export class MFADeviceForm extends ModelForm<Device, number> {
         </ak-form-element-horizontal>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-user-mfa-form": MFADeviceForm;
-    }
-}

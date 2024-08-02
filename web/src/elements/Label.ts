@@ -57,9 +57,3 @@ export class Label extends AKElement {
         </span>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-label": Label;
-    }
-}

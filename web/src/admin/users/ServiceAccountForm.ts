@@ -144,9 +144,3 @@ export class ServiceAccountForm extends Form<UserServiceAccountRequest> {
         return super.renderFormWrapper();
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-user-service-account-form": ServiceAccountForm;
-    }
-}

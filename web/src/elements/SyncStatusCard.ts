@@ -117,9 +117,3 @@ export class SyncStatusCard extends AKElement {
         </div>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-sync-status-card": SyncStatusCard;
-    }
-}

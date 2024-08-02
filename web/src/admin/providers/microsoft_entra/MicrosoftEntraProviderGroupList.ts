@@ -1,4 +1,5 @@
 import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { uiConfig } from "@goauthentik/common/ui/config";
 import "@goauthentik/elements/forms/DeleteBulkForm";
 import { PaginatedResponse, Table, TableColumn } from "@goauthentik/elements/table/Table";
 
@@ -36,9 +37,12 @@ export class MicrosoftEntraProviderGroupList extends Table<MicrosoftEntraProvide
         </ak-forms-delete-bulk>`;
     }
 
-    async apiEndpoint(): Promise<PaginatedResponse<MicrosoftEntraProviderGroup>> {
+    async apiEndpoint(page: number): Promise<PaginatedResponse<MicrosoftEntraProviderGroup>> {
         return new ProvidersApi(DEFAULT_CONFIG).providersMicrosoftEntraGroupsList({
-            ...(await this.defaultEndpointConfig()),
+            page: page,
+            pageSize: (await uiConfig()).pagination.perPage,
+            ordering: this.order,
+            search: this.search || "",
             providerId: this.providerId,
         });
     }
@@ -62,11 +66,5 @@ export class MicrosoftEntraProviderGroupList extends Table<MicrosoftEntraProvide
                 <pre>${JSON.stringify(item.attributes, null, 4)}</pre>
             </div>
         </td>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-provider-microsoft-entra-groups-list": MicrosoftEntraProviderGroupList;
     }
 }

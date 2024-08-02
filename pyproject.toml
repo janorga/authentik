@@ -32,7 +32,7 @@ select = [
     "PL",
 ]
 ignore = [
-    "DJ001", # Avoid using `null=True` on string-based fields,
+    "DJ001" # Avoid using `null=True` on string-based fields,
 ]
 [tool.ruff.lint.pylint]
 max-args = 7
@@ -85,8 +85,10 @@ filterwarnings = [
 [tool.poetry.dependencies]
 argon2-cffi = "*"
 celery = "*"
-channels = "*"
+channels = { version = "*", extras = ["daphne"] }
 channels-redis = "*"
+codespell = "*"
+colorama = "*"
 cryptography = "*"
 dacite = "*"
 deepmerge = "*"
@@ -101,11 +103,10 @@ django-prometheus = "*"
 django-redis = "*"
 django-storages = { extras = ["s3"], version = "*" }
 # See https://github.com/django-tenants/django-tenants/pull/997
-django-tenants = { git = "https://github.com/rissson/django-tenants.git", branch = "authentik-fixes" }
+django-tenants = { git = "https://github.com/rissson/django-tenants.git", branch="authentik-fixes" }
 djangorestframework = "3.14.0"
 djangorestframework-guardian = "*"
 docker = "*"
-drf-orjson-renderer = "*"
 drf-spectacular = "*"
 dumb-init = "*"
 duo-client = "*"
@@ -127,7 +128,6 @@ psycopg = { extras = ["c"], version = "*" }
 pydantic = "*"
 pydantic-scim = "*"
 pyjwt = "*"
-pyrad = "*"
 python = "~3.12"
 pyyaml = "*"
 requests-oauthlib = "*"
@@ -139,6 +139,7 @@ structlog = "*"
 swagger-spec-validator = "*"
 tenant-schemas-celery = "*"
 twilio = "*"
+twisted = "*"
 ua-parser = "*"
 # Pinned because of botocore https://github.com/orgs/python-poetry/discussions/7937
 urllib3 = { extras = ["secure"], version = "<3" }
@@ -153,8 +154,6 @@ zxcvbn = "*"
 bandit = "*"
 black = "*"
 bump2version = "*"
-channels = { version = "*", extras = ["daphne"] }
-codespell = "*"
 colorama = "*"
 coverage = { extras = ["toml"], version = "*" }
 debugpy = "*"
@@ -162,6 +161,7 @@ drf-jsonschema-serializer = "*"
 freezegun = "*"
 importlib-metadata = "*"
 pdoc = "*"
+pyrad = "*"
 pytest = "*"
 pytest-django = "*"
 pytest-github-actions-annotate-failures = "*"

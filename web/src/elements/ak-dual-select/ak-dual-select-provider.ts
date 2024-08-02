@@ -1,4 +1,4 @@
-import { AkControlElement } from "@goauthentik/elements/AkControlElement.js";
+import { AKElement } from "@goauthentik/elements/Base";
 import { debounce } from "@goauthentik/elements/utils/debounce";
 import { CustomListenerElement } from "@goauthentik/elements/utils/eventEmitter";
 
@@ -26,63 +26,43 @@ import type { DataProvider, DualSelectPair } from "./types";
  */
 
 @customElement("ak-dual-select-provider")
-export class AkDualSelectProvider extends CustomListenerElement(AkControlElement) {
+export class AkDualSelectProvider extends CustomListenerElement(AKElement) {
     /** A function that takes a page and returns the DualSelectPair[] collection with which to update
      * the "Available" pane.
-     *
-     * @attr
      */
     @property({ type: Object })
     provider!: DataProvider;
 
-    /**
-     * The list of selected items. This is the *complete* list, not paginated, as presented by a
-     * component with a multi-select list of items to track.
-     *
-     * @attr
-     */
     @property({ type: Array })
     selected: DualSelectPair[] = [];
 
-    /**
-     * The label for the left ("available") pane
-     *
-     * @attr
-     */
     @property({ attribute: "available-label" })
     availableLabel = msg("Available options");
 
-    /**
-     * The label for the right ("selected") pane
-     *
-     * @attr
-     */
     @property({ attribute: "selected-label" })
     selectedLabel = msg("Selected options");
 
-    /**
-     * The debounce for the search as the user is typing in a request
-     *
-     * @attr
-     */
+    /** The remote lists are debounced by definition. This is the interval for the debounce. */
     @property({ attribute: "search-delay", type: Number })
     searchDelay = 250;
 
     @state()
-    options: DualSelectPair[] = [];
+    private options: DualSelectPair[] = [];
 
-    protected dualSelector: Ref<AkDualSelect> = createRef();
+    private dualSelector: Ref<AkDualSelect> = createRef();
 
-    protected isLoading = false;
+    private isLoading = false;
 
     private doneFirstUpdate = false;
     private internalSelected: DualSelectPair[] = [];
 
-    protected pagination?: Pagination;
+    private pagination?: Pagination;
 
     constructor() {
         super();
         setTimeout(() => this.fetch(1), 0);
+        // Notify AkForElementHorizontal how to handle this thing.
+        this.dataset.akControl = "true";
         this.onNav = this.onNav.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onSearch = this.onSearch.bind(this);
@@ -166,11 +146,5 @@ export class AkDualSelectProvider extends CustomListenerElement(AkControlElement
             available-label=${this.availableLabel}
             selected-label=${this.selectedLabel}
         ></ak-dual-select>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-dual-select-provider": AkDualSelectProvider;
     }
 }

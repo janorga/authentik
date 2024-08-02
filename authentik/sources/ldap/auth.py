@@ -6,9 +6,10 @@ from structlog.stdlib import get_logger
 
 from authentik.core.auth import InbuiltBackend
 from authentik.core.models import User
-from authentik.sources.ldap.models import LDAP_DISTINGUISHED_NAME, LDAPSource
+from authentik.sources.ldap.models import LDAPSource
 
 LOGGER = get_logger()
+LDAP_DISTINGUISHED_NAME = "distinguishedName"
 
 
 class LDAPBackend(InbuiltBackend):

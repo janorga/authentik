@@ -1,4 +1,5 @@
 import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { uiConfig } from "@goauthentik/common/ui/config";
 import { getRelativeTime } from "@goauthentik/common/utils";
 import "@goauthentik/components/ak-status-label";
 import "@goauthentik/elements/buttons/SpinnerButton";
@@ -26,9 +27,12 @@ export class MemberSelectTable extends TableModal<User> {
 
     order = "username";
 
-    async apiEndpoint(): Promise<PaginatedResponse<User>> {
+    async apiEndpoint(page: number): Promise<PaginatedResponse<User>> {
         return new CoreApi(DEFAULT_CONFIG).coreUsersList({
-            ...(await this.defaultEndpointConfig()),
+            ordering: this.order,
+            page: page,
+            pageSize: (await uiConfig()).pagination.perPage,
+            search: this.search || "",
             includeGroups: false,
         });
     }
@@ -84,11 +88,5 @@ export class MemberSelectTable extends TableModal<User> {
                     ${msg("Cancel")}
                 </ak-spinner-button>
             </footer>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-group-member-select-table": MemberSelectTable;
     }
 }

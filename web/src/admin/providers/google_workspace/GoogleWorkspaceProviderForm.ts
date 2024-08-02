@@ -296,9 +296,3 @@ export class GoogleWorkspaceProviderFormPage extends BaseProviderForm<GoogleWork
             </ak-form-group>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-provider-google-workspace-form": GoogleWorkspaceProviderFormPage;
-    }
-}

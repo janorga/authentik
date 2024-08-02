@@ -1,4 +1,3 @@
-import "@goauthentik/admin/rbac/ObjectPermissionsPage";
 import "@goauthentik/admin/sources/scim/SCIMSourceForm";
 import "@goauthentik/admin/sources/scim/SCIMSourceGroups";
 import "@goauthentik/admin/sources/scim/SCIMSourceUsers";
@@ -11,6 +10,7 @@ import "@goauthentik/elements/buttons/ActionButton";
 import "@goauthentik/elements/buttons/SpinnerButton";
 import "@goauthentik/elements/buttons/TokenCopyButton";
 import "@goauthentik/elements/forms/ModalForm";
+import "@goauthentik/elements/rbac/ObjectPermissionsPage";
 
 import { msg } from "@lit/localize";
 import { CSSResult, TemplateResult, html } from "lit";
@@ -211,11 +211,5 @@ export class SCIMSourceViewPage extends AKElement {
                 objectPk=${this.source.pk}
             ></ak-rbac-object-permission-page>
         </ak-tabs>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-source-scim-view": SCIMSourceViewPage;
     }
 }

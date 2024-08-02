@@ -37,9 +37,3 @@ export class WorkersStatusCard extends AdminStatusCard<number> {
         }
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-admin-status-card-workers": WorkersStatusCard;
-    }
-}

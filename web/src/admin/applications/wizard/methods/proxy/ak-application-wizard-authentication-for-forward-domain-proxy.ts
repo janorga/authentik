@@ -60,9 +60,3 @@ export class AkForwardDomainProxyApplicationWizardPage extends AkTypeProxyApplic
 }
 
 export default AkForwardDomainProxyApplicationWizardPage;
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-application-wizard-authentication-for-forward-proxy-domain": AkForwardDomainProxyApplicationWizardPage;
-    }
-}

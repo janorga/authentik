@@ -118,9 +118,3 @@ export class AuthenticatorDuoStage extends BaseStage<
             </footer>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-authenticator-duo": AuthenticatorDuoStage;
-    }
-}

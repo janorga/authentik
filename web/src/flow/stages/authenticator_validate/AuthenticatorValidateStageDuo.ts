@@ -73,9 +73,3 @@ export class AuthenticatorValidateStageWebDuo extends BaseDeviceStage<
         </div>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-authenticator-validate-duo": AuthenticatorValidateStageWebDuo;
-    }
-}

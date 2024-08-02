@@ -328,9 +328,3 @@ export class RacInterface extends Interface {
         `;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-rac": RacInterface;
-    }
-}

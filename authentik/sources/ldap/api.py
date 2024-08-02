@@ -3,7 +3,10 @@
 from typing import Any
 
 from django.core.cache import cache
-from drf_spectacular.utils import extend_schema, inline_serializer
+from django_filters.filters import AllValuesMultipleFilter
+from django_filters.filterset import FilterSet
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, extend_schema_field, inline_serializer
 from guardian.shortcuts import get_objects_for_user
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -13,12 +16,12 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from authentik.core.api.property_mappings import PropertyMappingFilterSet, PropertyMappingSerializer
+from authentik.core.api.property_mappings import PropertyMappingSerializer
 from authentik.core.api.sources import SourceSerializer
 from authentik.core.api.used_by import UsedByMixin
 from authentik.crypto.models import CertificateKeyPair
 from authentik.lib.sync.outgoing.api import SyncStatusSerializer
-from authentik.sources.ldap.models import LDAPSource, LDAPSourcePropertyMapping
+from authentik.sources.ldap.models import LDAPPropertyMapping, LDAPSource
 from authentik.sources.ldap.tasks import CACHE_KEY_STATUS, SYNC_CLASSES
 
 
@@ -78,6 +81,8 @@ class LDAPSourceSerializer(SourceSerializer):
             "sync_users_password",
             "sync_groups",
             "sync_parent_group",
+            "property_mappings",
+            "property_mappings_group",
             "connectivity",
         ]
         extra_kwargs = {"bind_password": {"write_only": True}}
@@ -111,8 +116,8 @@ class LDAPSourceViewSet(UsedByMixin, ModelViewSet):
         "sync_users_password",
         "sync_groups",
         "sync_parent_group",
-        "user_property_mappings",
-        "group_property_mappings",
+        "property_mappings",
+        "property_mappings_group",
     ]
     search_fields = ["name", "slug"]
     ordering = ["name"]
@@ -174,26 +179,31 @@ class LDAPSourceViewSet(UsedByMixin, ModelViewSet):
         return Response(data=all_objects)
 
 
-class LDAPSourcePropertyMappingSerializer(PropertyMappingSerializer):
+class LDAPPropertyMappingSerializer(PropertyMappingSerializer):
     """LDAP PropertyMapping Serializer"""
 
     class Meta:
-        model = LDAPSourcePropertyMapping
-        fields = PropertyMappingSerializer.Meta.fields
+        model = LDAPPropertyMapping
+        fields = PropertyMappingSerializer.Meta.fields + [
+            "object_field",
+        ]
 
 
-class LDAPSourcePropertyMappingFilter(PropertyMappingFilterSet):
-    """Filter for LDAPSourcePropertyMapping"""
+class LDAPPropertyMappingFilter(FilterSet):
+    """Filter for LDAPPropertyMapping"""
 
-    class Meta(PropertyMappingFilterSet.Meta):
-        model = LDAPSourcePropertyMapping
+    managed = extend_schema_field(OpenApiTypes.STR)(AllValuesMultipleFilter(field_name="managed"))
+
+    class Meta:
+        model = LDAPPropertyMapping
+        fields = "__all__"
 
 
-class LDAPSourcePropertyMappingViewSet(UsedByMixin, ModelViewSet):
+class LDAPPropertyMappingViewSet(UsedByMixin, ModelViewSet):
     """LDAP PropertyMapping Viewset"""
 
-    queryset = LDAPSourcePropertyMapping.objects.all()
-    serializer_class = LDAPSourcePropertyMappingSerializer
-    filterset_class = LDAPSourcePropertyMappingFilter
+    queryset = LDAPPropertyMapping.objects.all()
+    serializer_class = LDAPPropertyMappingSerializer
+    filterset_class = LDAPPropertyMappingFilter
     search_fields = ["name"]
     ordering = ["name"]

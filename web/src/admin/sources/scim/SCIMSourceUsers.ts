@@ -1,4 +1,5 @@
 import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { uiConfig } from "@goauthentik/common/ui/config";
 import { PaginatedResponse, Table, TableColumn } from "@goauthentik/elements/table/Table";
 
 import { msg } from "@lit/localize";
@@ -17,9 +18,12 @@ export class SCIMSourceUserList extends Table<SCIMSourceUser> {
         return true;
     }
 
-    async apiEndpoint(): Promise<PaginatedResponse<SCIMSourceUser>> {
+    async apiEndpoint(page: number): Promise<PaginatedResponse<SCIMSourceUser>> {
         return new SourcesApi(DEFAULT_CONFIG).sourcesScimUsersList({
-            ...(await this.defaultEndpointConfig()),
+            page: page,
+            pageSize: (await uiConfig()).pagination.perPage,
+            ordering: this.order,
+            search: this.search || "",
             sourceSlug: this.sourceSlug,
         });
     }
@@ -44,11 +48,5 @@ export class SCIMSourceUserList extends Table<SCIMSourceUser> {
             </a>`,
             html`${item.id}`,
         ];
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-source-scim-users-list": SCIMSourceUserList;
     }
 }

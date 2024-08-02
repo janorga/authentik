@@ -101,9 +101,3 @@ export class SourceStageForm extends BaseStageForm<SourceStage> {
         `;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-stage-source-form": SourceStageForm;
-    }
-}

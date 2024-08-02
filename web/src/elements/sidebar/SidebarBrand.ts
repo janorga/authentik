@@ -93,9 +93,3 @@ export class SidebarBrand extends WithBrandConfig(AKElement) {
             </a>`;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-sidebar-brand": SidebarBrand;
-    }
-}

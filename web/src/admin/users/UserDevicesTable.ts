@@ -101,9 +101,3 @@ export class UserDeviceTable extends Table<Device> {
         ];
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-user-device-table": UserDeviceTable;
-    }
-}

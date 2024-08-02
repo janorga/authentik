@@ -71,9 +71,3 @@ export class CertificateKeyPairForm extends Form<CertificateGenerationRequest> {
             </ak-form-element-horizontal> `;
     }
 }
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-crypto-certificate-generate-form": CertificateKeyPairForm;
-    }
-}

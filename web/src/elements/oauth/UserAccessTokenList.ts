@@ -1,4 +1,5 @@
 import { DEFAULT_CONFIG } from "@goauthentik/common/api/config";
+import { uiConfig } from "@goauthentik/common/ui/config";
 import { getRelativeTime } from "@goauthentik/common/utils";
 import "@goauthentik/components/ak-status-label";
 import "@goauthentik/elements/chips/Chip";
@@ -26,15 +27,17 @@ export class UserOAuthAccessTokenList extends Table<TokenModel> {
         return super.styles.concat(PFFlex);
     }
 
-    async apiEndpoint(): Promise<PaginatedResponse<TokenModel>> {
+    async apiEndpoint(page: number): Promise<PaginatedResponse<TokenModel>> {
         return new Oauth2Api(DEFAULT_CONFIG).oauth2AccessTokensList({
-            ...(await this.defaultEndpointConfig()),
             user: this.userId,
+            ordering: "expires",
+            page: page,
+            pageSize: (await uiConfig()).pagination.perPage,
         });
     }
 
     checkbox = true;
-    order = "expires";
+    order = "-expires";
 
     columns(): TableColumn[] {
         return [
@@ -101,11 +104,5 @@ export class UserOAuthAccessTokenList extends Table<TokenModel> {
                 })}
             </ak-chip-group>`,
         ];
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-user-oauth-access-token-list": UserOAuthAccessTokenList;
     }
 }

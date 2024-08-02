@@ -1,4 +1,4 @@
-import { AkControlElement } from "@goauthentik/elements/AkControlElement";
+import { AKElement } from "@goauthentik/elements/Base";
 import { CustomEmitterElement } from "@goauthentik/elements/utils/eventEmitter";
 
 import { msg } from "@lit/localize";
@@ -23,7 +23,7 @@ function* kvToPairs(items: CheckboxPair[]): Iterable<CheckboxPr> {
     }
 }
 
-const AkElementWithCustomEvents = CustomEmitterElement(AkControlElement);
+const AkElementWithCustomEvents = CustomEmitterElement(AKElement);
 
 /**
  * @element ak-checkbox-group
@@ -223,11 +223,5 @@ export class CheckboxGroup extends AkElementWithCustomEvents {
         return html`<div part="checkbox-group" class="pf-c-form__group-control pf-m-stack">
             ${map(kvToPairs(this.options), renderOne)}
         </div>`;
-    }
-}
-
-declare global {
-    interface HTMLElementTagNameMap {
-        "ak-checkbox-group": CheckboxGroup;
     }
 }
