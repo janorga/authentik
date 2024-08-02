@@ -44,7 +44,7 @@ spec:
   type: ClusterIP
   selector:
     app.kubernetes.io/managed-by: goauthentik.io
-    app.kubernetes.io/name: authentik-outpost
+    app.kubernetes.io/name: authentik-proxy
     app.kubernetes.io/instance: __OUTPOST_NAME__
 ---
 apiVersion: apps/v1
